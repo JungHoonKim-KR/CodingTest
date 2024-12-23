@@ -1,53 +1,48 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
+
 public class Main {
 
 
-	public static void main(String[] args) {
-		Scanner sc=new Scanner(System.in);
-		String arr=sc.next();
-		int len=0;
-		for (int i=0;i<arr.length();i++) {
-			char b=arr.charAt(i);
-			
-			if(i!=arr.length()-1 && b=='c' && (arr.charAt(i+1)=='=' || arr.charAt(i+1)=='-')) {
-				i+=1;
-				
-			}
-			else if(i!=arr.length()-1 && b=='d' ) {
-				if(arr.charAt(i+1)=='z') {
-					if (i!=arr.length()-2&& arr.charAt(i+2)=='=') {
-						i+=2;
-					}
-				}
-				else if(arr.charAt(i+1)=='-') {
-					i+=1;
-				
-				}
-				
-			}
-			
-			else if(i!=arr.length()-1 &&b=='l'&&arr.charAt(i+1)=='j') {
-				i+=1;
-			}
-			else if(i!=arr.length()-1 &&b=='n'&&arr.charAt(i+1)=='j') {
-				i+=1;
-			}
-			else if(i!=arr.length()-1 &&b=='s'&&arr.charAt(i+1)=='=') {
-				i+=1;
-			}
-			else if(i!=arr.length()-1 &&b=='z'&&arr.charAt(i+1)=='=') {
-				i+=1;
-			}
-			len+=1;
-			
-			
-	
-	
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
 
-		
-		
-		
-	}
-		System.out.print(len);
-	}
+        String target = bufferedReader.readLine();
+        int result = 0;
+        for(int i = 0; i<target.length(); i++) {
+            if(target.charAt(i)=='c' && i<target.length()-1){
+                if(target.charAt(i+1)=='=' || target.charAt(i+1)=='-'){
+                    i++;
+                }
+            }
+            else if(target.charAt(i) =='d' && i<target.length()-1){
+                if(target.charAt(i+1)=='-')
+                    i++;
+                else if(target.charAt(i+1)=='z' && i<target.length()-2 && target.charAt(i+2)=='=')
+                    i+=2;
+            }
+            else if(target.charAt(i)=='l' && i<target.length()-1){
+                if(target.charAt(i+1)=='j')
+                    i++;
+            }
+            else if(target.charAt(i)=='n' && i<target.length()-1){
+                if(target.charAt(i+1)=='j')
+                    i++;
+            }
+            else if(target.charAt(i)=='s' && i<target.length()-1){
+                if(target.charAt(i+1)=='=')
+                    i++;
+            }
+            else if(target.charAt(i)=='z' && i<target.length()-1){
+                if(target.charAt(i+1)=='=')
+                    i++;
+            }
+            result ++;
+        }
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.flush();
+    }
 }
