@@ -16,19 +16,14 @@ public class Main {
         int e = Integer.parseInt(st.nextToken());
         int f = Integer.parseInt(st.nextToken());
 
-        for(int x = -999; x <= 999; x++) {
-            for(int y = -999; y <= 999; y++) {
-                if(a*x + b*y == c && d*x + e*y == f){
-                    bufferedWriter.write(x + " " + y );
-                    bufferedWriter.flush();
-                }
-            }
-        }
+        int x = ((c*e - b*f)) / ((a*e) - (b*d));
+        int y = ((c*d - f*a)) / ((b*d) -(a*e) );
 
+        bufferedWriter.write(x+" "+y+"\n");
+        bufferedWriter.flush();
     }
 
 
 }
-
 
 
