@@ -1,61 +1,54 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.StringTokenizer;
-
-
-
 
 public class Main {
 
-    static char[][] arr;
-
+    static char [][] data;
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        arr = new char[n][m];
-        int min = n * m;
-        for (int y = 0; y < n; y++) {
-            String input = br.readLine();
-            for (int x = 0; x < m; x++) {
-                arr[y][x] = input.charAt(x);
-            }
-        }
-        for (int w = 0; w < n - 7; w++) {
-            for (int s = 0; s < m - 7; s++) {
-                min = Math.min(min, cal(w, s));
-            }
-        }
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        System.out.println(min);
+        StringTokenizer st = new StringTokenizer(bufferedReader.readLine());
+        int y = Integer.parseInt(st.nextToken());
+        int x = Integer.parseInt(st.nextToken());
+
+        data = new char[y][x];
+        for(int j=0; j<y; j++) {
+            String s = bufferedReader.readLine();
+            for(int i =0; i<x; i++) {
+                data[j][i] = s.charAt(i);
+            }
+        }
+        int min = x*y;
+
+        for(int j = 0; j < y-7; j++) {
+            for(int i=0; i<x-7; i++){
+                min = Math.min(min, check(i,j));
+            }
+        }
+        bufferedWriter.write(min+"");
+        bufferedWriter.flush();
+
     }
 
-    public static int cal(int x, int y) {
-
-        int count = 0;
-
-        for (int j = x; j < x + 8; j++) {
-            for (int z = y; z < y + 8; z++) {
-                if ((x + y) % 2 == (j + z) % 2) {
-
-                    if (arr[j][z] != arr[x][y])
-                        count++;
-
-                } else if ((x + y) % 2 != (j + z) % 2) {
-                    if (arr[j][z] == arr[x][y])
-                        count++;
-
-
-                }
-
-
+    static int check(int x, int y){
+        int count=0;
+        for(int j =y; j<y+8;j++){
+            for(int i =x; i<x+8;i++){
+               if((x+y)%2 == (i+j)%2){
+                   if(data[y][x] != data[j][i])
+                       count++;
+               }
+               else if((x+y)%2 != (i+j)%2){
+                   if(data[y][x] == data[j][i])
+                       count++;
+               }
             }
         }
-
-        return Math.min(count,64-count);
-
+        return Math.min(count, 64-count);
     }
+
+
 }
+
 
