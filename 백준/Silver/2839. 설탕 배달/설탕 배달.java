@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 
 public class Main {
 
@@ -6,22 +7,26 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         int n = Integer.parseInt(br.readLine());
-        int initFiveCoins = n/5;
-        int result = -1;
-        for(int i =0; i<=initFiveCoins; i++){
-            int fiveCoins = initFiveCoins - i;
-            int remain = n - (5 * fiveCoins);
-            if(remain %3 == 0){
-                result =fiveCoins + remain/3;
-                break;
+
+        int []dp = new int[n+1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+
+        for(int i =3; i<=n; i++){
+            if(i>=3 && dp[i-3] != Integer.MAX_VALUE){
+                dp[i] = Math.min(dp[i-3] +1, dp[i]);
+            }
+            if(i>=5 && dp[i-5] != Integer.MAX_VALUE){
+                dp[i] = Math.min(dp[i-5] +1, dp[i]);
             }
         }
-        bw.write(result+"");
+        if(dp[n] == Integer.MAX_VALUE){
+            bw.write("-1\n");
+        }
+        else
+            bw.write(dp[n]+"");
         bw.flush();
     }
-
-
-
 }
 
 
