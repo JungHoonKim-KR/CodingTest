@@ -33,3 +33,6 @@
 
  <p>조건에 따라 정렬하여 단어들을 출력한다.</p>
 
+### 풀이
+중복이 없어야 하니 Set으로 받자. 이 때 TreeSet은 기본으로 정렬을 해주니 길이 정렬만 따로 해주면 된다.
+출력 전에 set.stream().toList는 java11에서 안되니까 set.stream().collect(Collectors.toList())를 사용하자.
