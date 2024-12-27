@@ -1,39 +1,29 @@
 import java.io.*;
-import java.util.Arrays;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
-
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw= new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb=new StringBuilder();
-        int n = Integer.parseInt(br.readLine());
-        int arr[] = new int[n];
-        for (int i = 0; i < n; i++) {
-            arr[i]=Integer.parseInt(br.readLine());
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        }
-        Arrays.sort(arr);
-        for(int j=0;j<n;j++){
-            bw.write(String.valueOf(arr[j]));
-            bw.newLine();
-
-        }
+       int n = Integer.parseInt(br.readLine());
+       int arr[] = new int[n];
+       for(int i =0; i<n; i++){
+           arr[i] = Integer.parseInt(br.readLine());
+       }
+        List<Integer> list = Arrays.stream(arr).boxed().collect(Collectors.toList());
+        Collections.sort(list);
+        list.stream().forEach(i -> {
+            try {
+                bw.write(i+"\n");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         bw.flush();
-        bw.close();
-
-
-
-
-    }}
-
-
-
-
-
-
+    }
+}
 
 
