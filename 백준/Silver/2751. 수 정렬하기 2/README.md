@@ -26,3 +26,11 @@
 
  <p>첫째 줄부터 N개의 줄에 오름차순으로 정렬한 결과를 한 줄에 하나씩 출력한다.</p>
 
+### 풀이
+백준 및 여러 코딩테스트 사이트에서는 java11이 대부분이기 때문에 stream().toList()를 쓸 수가 없다.
+stream().collect(Collectors.toList())를 쓰는 게 안정적이다.
+
+Arrays.sort()는 최악의 복잡도가 O(n2)이라 안쓰려고 Collections.sort()를 썼는데 둘 다 통과했다.
+
+![image](https://github.com/user-attachments/assets/8477b0c2-6869-4c4c-a4e1-fc1d4a480c53)
+확실히 배열이 메모리를 덜 먹는다
