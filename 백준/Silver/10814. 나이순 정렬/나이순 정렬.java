@@ -8,25 +8,26 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int n = Integer.parseInt(br.readLine());
+        StringBuilder[] sb= new StringBuilder[201];
+        for(int i =0; i<sb.length; i++){
+            sb[i] = new StringBuilder();
+        }
 
         StringTokenizer st;
-        LinkedHashMap<Integer, List<String>> map = new LinkedHashMap<>();
-        for(int i=0; i<n; i++){
-            st  = new StringTokenizer(br.readLine());
-            map.computeIfAbsent(Integer.parseInt(st.nextToken()),k->new ArrayList<>()).add(st.nextToken());
-        }
-        LinkedHashMap<Integer, List<String>> collect = map.entrySet().stream().sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, LinkedHashMap::new
-                ));
+        for(int i =0; i<n; i++){
+            st = new StringTokenizer(br.readLine());
+            int age = Integer.parseInt(st.nextToken());
+            String name =st.nextToken();
 
-        for(Map.Entry<Integer,List<String>> entry : collect.entrySet()){
-            for(String value:entry.getValue()){
-                    bw.write(entry.getKey()+" "+ value+"\n");
-            }
+            sb[age].append(age + " "+ name+"\n");
+
         }
+
+        StringBuilder b = new StringBuilder();
+        for(StringBuilder s: sb){
+            b.append(s);
+        }
+        bw.write(b.toString());
         bw.flush();
         bw.close();
     }
