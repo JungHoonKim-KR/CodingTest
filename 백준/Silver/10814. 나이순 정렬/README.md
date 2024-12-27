@@ -65,5 +65,7 @@ computeIfAbsent는 value인 ArrayList를 반환하기 때문에 add를 통해 �
         }
 ```
 map을 제대로 활용할 수 있었던 문제
+String 2차원 배열로 하면 간단하지만 성능 차이가 많이 난다.
+![image](https://github.com/user-attachments/assets/fc969b74-5414-4a78-94c6-8cdf9d25b771)
 
 
