@@ -1,51 +1,37 @@
 import java.io.*;
-import java.lang.String;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Main {
 
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         int n = Integer.parseInt(br.readLine());
-        int[] arr = new int[n];
-        int []b=new int [n];
-        int count=0;
-        StringTokenizer st=new StringTokenizer(br.readLine());
-        for (int i = 0; i < n; i++) {
+        int arr[] = new int [n];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for(int i =0; i<n; i++){
             arr[i] = Integer.parseInt(st.nextToken());
-            b[i]=arr[i];
         }
+        int copied[] = arr.clone();
+        Arrays.sort(copied);
 
-        Arrays.sort(b);
-        HashMap<Integer,Integer>rank=new HashMap<Integer,Integer>();
-        StringBuilder sb = new StringBuilder();
-        for(int j:b){
-            if(!rank.containsKey(j)) {
-                rank.put(j, count);
-                count++;
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        int num=0;
+        for(int value : copied){
+            if(!hashMap.containsKey(value)){
+                hashMap.put(value, num);
+                num++;
             }
         }
-        for(int k:arr){
-            sb.append(rank.get(k)+" ");
+
+        for(int value : arr){
+            bw.write(hashMap.get(value)+ " ");
         }
-
-        System.out.println(sb);
-
-
+        bw.flush();
     }
 }
-
-
-
-
-
-
-
-
 
 
