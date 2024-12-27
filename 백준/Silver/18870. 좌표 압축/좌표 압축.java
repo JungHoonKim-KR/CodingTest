@@ -20,15 +20,15 @@ public class Main {
 
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         int num=0;
-        for(int value : copied){
-            if(!hashMap.containsKey(value)){
-                hashMap.put(value, num);
+        for(int i =0; i<n; i++){
+            if(i>=1 && copied[i-1] != copied[i]){
                 num++;
             }
+            hashMap.putIfAbsent(copied[i], num);
         }
 
-        for(int value : arr){
-            bw.write(hashMap.get(value)+ " ");
+        for(int i =0; i<n; i++){
+            bw.write(hashMap.get(arr[i])+ " ");
         }
         bw.flush();
     }
