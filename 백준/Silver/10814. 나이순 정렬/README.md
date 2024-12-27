@@ -28,3 +28,42 @@
 
  <p>첫째 줄부터 총 N개의 줄에 걸쳐 온라인 저지 회원을 나이 순, 나이가 같으면 가입한 순으로 한 줄에 한 명씩 나이와 이름을 공백으로 구분해 출력한다.</p>
 
+### 풀이
+Map을 이용했고, 한 key에 여러 value가 가능해야 하기 때문에 Map<Integer, List<String>>을 이용했다.
+조건에서 입력 순서를 지키라고 하지만 List라 신경쓰지 않아도 된다.
+
+우선 값을 받아보자
+```java
+int n = Integer.parseInt(br.readLine());
+        StringTokenizer st;
+        Map<Integer, List<String>> map = new HashMap<>();
+        for(int i=0; i<n; i++){
+            st  = new StringTokenizer(br.readLine());
+            map.computeIfAbsent(Integer.parseInt(st.nextToken()),k->new ArrayList<>()).add(st.nextToken());
+        }
+```
+value가 List 형태이기 때문에 최초에 초기화를 해줘야 해서 computeIfAbsent을 이용했다.
+computeIfAbsent는 value인 ArrayList를 반환하기 때문에 add를 통해 값을 저장할 수 있다.
+
+그 다음 중요한 개념은 Map이 Collection이 아니기 때문에 map 자체로는 정렬을 할 수가 없다는 것이다.
+때문에 Map.entrySet()을 stream으로 변환해 정렬해야 했다.
+```java
+       HashMap<Integer, List<String>> collect = map.entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, HashMap::new
+                ));
+
+```
+이렇게 하면 21,[Junkyu, Dohyun]을 얻을 수 있다. 출력은 이중 for문으로 value를 순회했다.
+```java
+        for(Map.Entry<Integer,List<String>> entry : collect.entrySet()){
+            for(String value:entry.getValue()){
+                    bw.write(entry.getKey()+" "+ value+"\n");
+            }
+        }
+```
+map을 제대로 활용할 수 있었던 문제
+
+
