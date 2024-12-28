@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -33,15 +32,13 @@ public class Main {
         int mid = (first+last)/2;
 
         while(first <= last){
-            if(arr[mid] == target){
-                return 1;
-            }else if(arr[mid]<target){
+           if(arr[mid]<target){
                 first = mid+1;
                 mid = (first+last)/2;
             }else if(arr[mid] > target){
                 last = mid-1;
                 mid = (first+last)/2;
-            }else return 0;
+            }else return 1;
         }
 
         return 0;
