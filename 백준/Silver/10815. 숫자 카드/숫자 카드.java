@@ -1,73 +1,49 @@
 import java.io.*;
-import java.lang.String;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-import java.util.stream.IntStream;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
-
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int a = Integer.parseInt(br.readLine());
-        int a_arr[] = new int[a];
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int z = 0; z < a; z++) {
-            a_arr[z] = Integer.parseInt(st.nextToken());
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int n = Integer.parseInt(br.readLine());
+        int card[] = new int[n];
+        StringTokenizer st  = new StringTokenizer(br.readLine());
+        for(int i =0; i<n;i++){
+            card[i] = Integer.parseInt(st.nextToken());
         }
-        Arrays.sort(a_arr);
-        int b = Integer.parseInt(br.readLine());
-        int b_arr[] = new int[b];
+        Arrays.sort(card);
+
+        int m = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
-        for (int k = 0; k < b; k++) {
-            b_arr[k] = Integer.parseInt(st.nextToken());
+        for(int i =0; i<m;i++){
+            int target = Integer.parseInt(st.nextToken());
+            bw.write(binarySearch(target, card)+ " ");
         }
-        int c[] = new int[b];
-        StringBuilder sb=new StringBuilder();
-        for(int j=0;j<b;j++){
-            if(BInary(a_arr,a,b_arr[j])==1)
-                c[j]=1;
-            else c[j]=0;
-            sb.append(c[j]+" ");
-
-        }
-        System.out.println(sb);
 
 
-
-
+        bw.flush();
+        bw.close();
     }
-    public static int BInary(int a[],int N,int t){
-        int first=0;
-        int last=N-1;
-        int target=t;
-        while(first<=last){
-            int mid=(first+last)/2;
-            if(target==a[mid])
+
+    static int binarySearch(int target, int arr[]){
+        int first = 0;
+        int last = arr.length-1;
+        int mid = (first+last)/2;
+
+        while(first <= last){
+            if(arr[mid] == target){
                 return 1;
-            else if(target>a[mid])
-                first=mid+1;
-            else  last=mid-1;
-            }
-        return 0;
+            }else if(arr[mid]<target){
+                first = mid+1;
+                mid = (first+last)/2;
+            }else if(arr[mid] > target){
+                last = mid-1;
+                mid = (first+last)/2;
+            }else return 0;
         }
 
-
+        return 0;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
