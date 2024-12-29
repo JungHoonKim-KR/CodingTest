@@ -36,3 +36,6 @@
 
  <p>재민이가 최종적으로 적어 낸 수의 합을 출력한다. 최종적으로 적어낸 수의 합은 2<sup>31</sup>-1보다 작거나 같은 정수이다.</p>
 
+### 풀이
+stack이랑 arrayList 둘 다 가능하고 arrayList가 더 빠르다.
+![image](https://github.com/user-attachments/assets/9db7c403-b46a-4b34-9e0d-c22b4f97975b)
