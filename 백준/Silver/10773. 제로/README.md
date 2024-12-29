@@ -38,4 +38,5 @@
 
 ### 풀이
 stack이랑 arrayList 둘 다 가능하고 arrayList가 더 빠르다.
-![image](https://github.com/user-attachments/assets/9db7c403-b46a-4b34-9e0d-c22b4f97975b)
+![image](https://github.com/user-attachments/assets/517f7216-ffe2-4754-9449-b50d226999a4)
+
