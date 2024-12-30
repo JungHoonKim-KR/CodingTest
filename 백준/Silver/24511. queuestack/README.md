@@ -53,3 +53,8 @@
 
  <p>수열 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D436 TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$C$</span></mjx-container>의 원소를 차례대로 queuestack에 삽입했을 때의 리턴값을 공백으로 구분하여 출력한다.</p>
 
+### 풀이
+일단 문제를 이해하는 데 그리 오래 걸리진 않았지만 구현에 있어 많은 과정을 거쳤다.<br>
+이해한대로 각 데이터구조를 만드니 계속 시간 초과가 발생했고, 문제를 계속 곱씹어야만 해결할 수 있었다.<br>
+문제가 어떤 걸 의도하는 지는 모르겠지만 이 문제는 계속 고치고 틀리고를 반복하여 인내심을 기를 수 있게 해준다.<br>
+결국 이 문제에서 스택은 의미 없으며 모든 큐들을 하나의 큐로 통합해야한다는 걸 빨리 이해하는 게 핵십이다.
