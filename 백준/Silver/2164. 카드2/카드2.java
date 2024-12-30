@@ -1,24 +1,29 @@
 import java.io.*;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.stream.IntStream;
+import java.util.*;
+
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int num = Integer.parseInt(br.readLine());
-        Queue<Integer> dataQueue = new LinkedList<>();
-        IntStream.rangeClosed(1,num).forEach(dataQueue::add);
-
-        while(dataQueue.size()!=1){
-            dataQueue.poll();
-            int secondData=dataQueue.poll();
-            dataQueue.add(secondData);
+        int n = Integer.parseInt(br.readLine());
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i = 1; i <=n; i++) {
+            queue.add(i);
         }
-        bw.write(dataQueue.peek()+"");
+
+        while(queue.size()>1){
+            queue.poll();
+            queue.add(queue.poll());
+        }
+        bw.write(queue.peek()+"");
+
         bw.flush();
-        bw.close();
     }
+
+
 }
+
+
