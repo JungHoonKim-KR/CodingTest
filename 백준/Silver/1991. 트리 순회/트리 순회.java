@@ -1,96 +1,72 @@
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
-
-
-class Node {
-    char value;
-    Node left, right;
-
-    public Node(char value, Node left, Node right) {
-        this.value = value;
-        this.left = left;
-        this.right = right;
-
-    }
-}
- class Tree {
-    Node root = new Node('A', null, null);
-    StringBuilder sb = new StringBuilder();
-    void Insert(Node tmp, char target, char left, char right) {
-        if (tmp == null) return;
-
-        if (root.value == target) {
-            root.left = (left == '.' ? null : new Node(left, null, null));
-            root.right = (right == '.' ? null : new Node(right, null, null));
-        } else if (target == tmp.value) {
-            tmp.left = (left == '.' ? null : new Node(left, null, null));
-            tmp.right = (right == '.' ? null : new Node(right, null, null));
-        } else {
-            Insert(tmp.left, target, left, right);
-            Insert(tmp.right, target, left, right);
-        }
-    }
-    void PreOrder(Node root){
-        if (root == null) return;
-        sb.append(root.value);
-        PreOrder(root.left);
-        PreOrder(root.right);
-    }
-
-    void PostOrder(Node root){
-        if (root == null) return;
-        PostOrder(root.left);
-        PostOrder(root.right);
-        sb.append(root.value);
-
-    }
-
-    void InOrder(Node root){
-        if (root == null) return;
-        InOrder(root.left);
-        sb.append(root.value);
-        InOrder(root.right);
-    }
-}
-
 
 public class Main {
 
+    static class Tree {
+        Map<Character, List<Character>> tree = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
 
-    StringBuilder sb;
+        void insert(char parent, char left, char right) {
+            tree.put(parent, Arrays.asList(left, right));
+        }
+
+        void preOrder(char node) {
+            if (node == '.' || node == 0) return;
+            sb.append(node); // 현재 노드 출력
+            List<Character> children = tree.get(node);
+            preOrder(children.get(0)); // 왼쪽 자식
+            preOrder(children.get(1)); // 오른쪽 자식
+        }
+
+        void inOrder(char node) {
+            if (node == '.' || node == 0) return;
+            List<Character> children = tree.get(node);
+            inOrder(children.get(0)); // 왼쪽 자식
+            sb.append(node); // 현재 노드 출력
+            inOrder(children.get(1)); // 오른쪽 자식
+        }
+
+        void postOrder(char node) {
+            if (node == '.' || node == 0) return;
+            List<Character> children = tree.get(node);
+            postOrder(children.get(0)); // 왼쪽 자식
+            postOrder(children.get(1)); // 오른쪽 자식
+            sb.append(node); // 현재 노드 출력
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int n = Integer.parseInt(br.readLine());
         Tree tree = new Tree();
-        StringTokenizer st;
 
         for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-            char target = st.nextToken().charAt(0);
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            char parent = st.nextToken().charAt(0);
             char left = st.nextToken().charAt(0);
             char right = st.nextToken().charAt(0);
-            tree.Insert(tree.root,target, left, right);
+            tree.insert(parent, left, right);
         }
 
-        tree.PreOrder(tree.root);
-        bw.write(tree.sb.toString()+"\n");
+        // PreOrder 순회
+        tree.preOrder('A');
+        bw.write(tree.sb.toString() + "\n");
         tree.sb.setLength(0);
-        tree.InOrder(tree.root);
-        bw.write(tree.sb.toString()+"\n");
+
+        // InOrder 순회
+        tree.inOrder('A');
+        bw.write(tree.sb.toString() + "\n");
         tree.sb.setLength(0);
-        tree.PostOrder(tree.root);
-        bw.write(tree.sb.toString()+"\n");
+
+        // PostOrder 순회
+        tree.postOrder('A');
+        bw.write(tree.sb.toString() + "\n");
 
         bw.flush();
-        br.close();  // 입력 스트림 닫기
-        bw.close();  // 출력 스트림 닫기
-
+        br.close();
+        bw.close();
     }
-
-
 }
-
-
