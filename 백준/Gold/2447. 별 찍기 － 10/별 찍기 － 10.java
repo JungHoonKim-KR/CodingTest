@@ -1,54 +1,57 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.lang.StringBuilder;
-
-
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Main {
-    static String arr[][];
-
-
+    static StringBuilder sb[];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        int n=Integer.parseInt(br.readLine());
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        arr=new String[n][n];
-        star(0,0,n,true);
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-               sb.append(arr[i][j]);
-            }
-            sb.append("\n");
+        int n = Integer.parseInt(br.readLine());
+        sb = new StringBuilder[n];
+
+        for(int i =0; i<n; i++){
+            sb[i] = new StringBuilder();
         }
-        System.out.println(sb);
+        divide(n, 0, 0);
+        for(int i =0; i<n; i++){
+            bw.write(sb[i].toString()+"\n");
+        }
+        bw.flush();
+        br.close();  // 입력 스트림 닫기
+        bw.close();  // 출력 스트림 닫기
+
     }
 
-
-    public static void star(int a, int b, int n, boolean isstar) {
-        int count=0;
-        if(n==1) {
-            if (isstar)
-                arr[a][b] = "*";
-            else
-                arr[a][b] = " ";
+    static void divide(int n, int y, int x) {
+        if(n == 1){
+            sb[y].append("*");
             return;
         }
-        for(int i=a;i<a+n;i+=n/3){
-            for(int j=b;j<b+n;j+=n/3){
-                if(++count!=5 && isstar)
-                    star(i,j,n/3,true);
-                else
-                    star(i,j,n/3,false);
 
+        int term = n / 3;
+        // term 기준에 걸리면 빈 칸 추가 그 이외의 범위는 divide 호출
+        for (int i = y; i < y+n; i += term) {
+            for (int j = x; j < x+n; j += term) {
+                if(i == y + term && j == x + term){
+                    for(int k = i; k< i+term; k++){
+                        for(int l = j; l<j+term; l++){
+                            sb[k].append(" ");
+                        }
+                    }
+                }
+                else{
+                    divide(term, i, j);
+                }
             }
         }
 
-
     }
 
+
 }
+
 
