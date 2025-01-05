@@ -1,70 +1,40 @@
 import java.io.*;
-import java.lang.String;
 import java.util.*;
 
-
-
 public class Main {
-    static int N;
-    static int M;
-    static int arr[];
-    static boolean visit[];
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        //문제 받기
-        StringTokenizer st=new StringTokenizer(br.readLine());
-        N=Integer.parseInt(st.nextToken());
-        M=Integer.parseInt(st.nextToken());
-        visit=new boolean[N];
-        arr=new int [M];
-        dfs(0);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
 
-        }
-        public static void dfs(int dep){
-            if(dep==M){
-                for(int value:arr){
-                    System.out.print(value+" ");
-                }
-                System.out.println();
-                return;
+        boolean boolArr [] = new boolean[n+1];
+        int arr [] = new int[m];
+        dfs(boolArr, arr, 0, n, m);
+        br.close();
+        bw.close();
+    }
+
+    static void dfs(boolean boolArr[], int arr[], int depth, int n, int m){
+        if(depth == m){
+            for(int num : arr){
+                System.out.print(num+" ");
             }
-            for(int i=0;i<N;i++){
-                if(!visit[i])
-                {
-                    visit[i]=true;
-                    arr[dep]=i+1;
-                    dfs(dep+1);
-                    visit[i]=false;
-                }
+            System.out.println();
+            return;
+        }
+
+        for(int i =1; i<=n; i++){
+            if(!boolArr[i]){
+                boolArr[i] = true;
+                arr[depth] = i;
+                dfs(boolArr, arr, depth+1, n, m);
+                boolArr[i] = false;
             }
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
