@@ -6,7 +6,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int n = Integer.parseInt(br.readLine());
 
@@ -16,7 +15,7 @@ public class Main {
         while(true){
             int[] count = queue.poll();
             if(count[0] == 1){
-                bw.write(count[1] + "\n");
+                System.out.println(count[1]);
                 break;
             }
 
@@ -35,7 +34,6 @@ public class Main {
             }
 
         }
-        bw.flush();
     }
 
 }
