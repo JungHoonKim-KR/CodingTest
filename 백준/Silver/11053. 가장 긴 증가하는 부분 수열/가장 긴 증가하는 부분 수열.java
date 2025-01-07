@@ -1,37 +1,36 @@
 import java.io.*;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.StringTokenizer;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        int length = Integer.parseInt(bufferedReader.readLine().trim());
-        Integer [] arr = new Integer[length];
-        Integer [] dp  = new Integer[length];
-        Arrays.fill(dp,1);
-        StringTokenizer st = new StringTokenizer(bufferedReader.readLine());
-        int ans = 0;
-        for(int i =0; i<length; i++){
-            int data = Integer.parseInt(st.nextToken());
-            arr[i] = data;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        // 자릿수
+        int n = Integer.parseInt(br.readLine());
+        int arr[] = new int[n];
+        int dp[] = new int[1001];
+        Arrays.fill(dp,1 );
+        StringTokenizer st  = new StringTokenizer(br.readLine());
+        for(int i =0; i<n ; i++){
+            arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        for(int i = 0; i < length; i++){
-            for(int j = 0; j < i ; j++){
-                if(arr[i]>arr[j]){
-                    dp[i] = Math.max(dp[i],dp[j]+1);
+
+        int max = 1;
+            for (int i = 1; i < n; i++) {
+                for (int j = 0; j < i; j++) {
+                    if (arr[i] > arr[j]) {
+                        dp[arr[i]] = Math.max(dp[arr[j]] + 1, dp[arr[i]]);
+                        max = Math.max(max, dp[arr[i]]);
+                    }
                 }
-            }
-            ans = Math.max(ans,dp[i]);
         }
+        System.out.println(max);
 
-        bufferedWriter.write(ans+"");
 
-        bufferedWriter.close();
-        bufferedReader.close();
     }
+
+
+
 }
