@@ -1,38 +1,46 @@
 import java.io.*;
 
-public class Main{
-    static long Mod = 1000000000L;
-    private static Long[][] dp;
+public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        int num = Integer.parseInt(br.readLine());
-        dp = new Long[num+1][10];
-        for(int i =0; i<10; i++){
-            dp[1][i] = 1L;
-        }
-        long result=0;
-        for(int i =1; i<=9;i++){
-            result += recur(num,i);
-        }
-        bw.write(result%Mod+"");
-        bw.flush();
-        bw.close();
+        long div = 1000000000;
+        // 자릿수
+        int n = Integer.parseInt(br.readLine());
 
-    }
+        // 자릿수 / 앞자리 수
+        long dp [][] = new long[n+1][10];
 
-    private static Long recur(int digit, int val){
-        if(digit==1)
-            return dp[digit][val];
-        if(dp[digit][val]== null){
-            if(val==0)
-                dp[digit][val] = recur(digit-1,1);
-            else if(val == 9)dp[digit][val] = recur(digit-1,8);
-            else{
-                dp[digit][val] =recur(digit-1,val-1) + recur(digit-1,val+1);
+        // 일의 자리 수의 계단 수는 1밖에 없음
+        for(int i=0 ; i<=9 ; i++){
+            dp[1][i] =1L;
+        }
+
+        for(int i=2; i<=n; i++){
+            for(int j=0; j<10;j++){
+                if(j == 0){
+                    dp[i][j] =  dp[i-1][j+1] % div;
+                }
+                else if(j == 9){
+                    dp[i][j] = dp[i-1][j-1] %div;
+                }
+                else{
+                    dp[i][j] = (dp[i-1][j+1]% div+ dp[i-1][j-1] %div);
+                }
             }
         }
 
-        return dp[digit][val]%Mod;
+        long result=0;
+
+        for(int i=1;i<=9;i++){
+            result += (int) dp[n][i];
+        }
+
+        System.out.println(result % div);
+
+
     }
+
+
+
 }
