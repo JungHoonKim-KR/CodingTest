@@ -1,56 +1,37 @@
 import java.io.*;
-import java.lang.String;
-import java.util.*;
-
-
+import java.util.StringTokenizer;
 
 public class Main {
-
+    static int mod = 10007;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        //문제 받기
-        StringTokenizer st=new StringTokenizer(br.readLine());
-        int a=Integer.parseInt(st.nextToken());
-        int b=Integer.parseInt(st.nextToken());
-        int arr[][]=new int [a+1][a+1];
-        for(int i=0;i<arr.length;i++){
-            for(int j=0;j<=i;j++){
-                if(i==j||j==0){
-                    arr[i][j]=1;
-                }
-                else arr[i][j]=(arr[i-1][j-1]+arr[i-1][j])%10007;
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
+
+        System.out.println((factorial(n) * mod_inverse(factorial(k) * factorial(n-k) % mod, mod -2)) % mod);
+    }
+    static int factorial(int n){
+        if(n<=1) return 1;
+        return n * factorial(n-1) % mod;
+    }
+    static int mod_inverse(int a, int exp){
+        int result=1;
+
+        while(exp >0){
+            if(exp % 2==1){
+                result *= a;
+                exp --;
+                result %= mod;
             }
-        }
-        System.out.println(arr[a][b]);
-
-        }
-
-
+            a *= a;
+            a %= mod;
+            exp /= 2;
         }
 
+        return result;
 
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
