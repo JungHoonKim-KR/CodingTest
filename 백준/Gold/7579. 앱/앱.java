@@ -1,55 +1,55 @@
-import java.io.*;
-import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Main {
+    static boolean dp[][];
+    static int n;
+    static int w[];
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+        int target = Integer.parseInt(st.nextToken());
 
         int memoryArr[] = new int[n];
-        int costArr[] = new int [n];
-
         st = new StringTokenizer(br.readLine());
+        int sumMemory=0;
         for(int i =0; i<n; i++){
-            memoryArr[i] = Integer.parseInt(st.nextToken());
+            int parseInt = Integer.parseInt(st.nextToken());
+            memoryArr[i] = parseInt;
         }
+
+        int costArr[] = new int[n];
         st = new StringTokenizer(br.readLine());
         for(int i =0; i<n; i++){
             costArr[i] = Integer.parseInt(st.nextToken());
         }
 
-        int dp[][] = new int[n][10001];
-        int min = Integer.MAX_VALUE;
-        for(int i = 0; i<n; i++){
+        int dp[] = new int[10001];
+
+        for(int i =0; i<n; i++){
             int memory = memoryArr[i];
             int cost = costArr[i];
-            for(int c=0; c<10001; c++){
-                if(i==0){
-                    if(c>= cost)
-                        dp[i][c] = memory;
-                }
-
-                else{
-                    if(c>= costArr[i]){
-                        // 현재 어플을 지우는 경우 vs 현재 어플을 지우지 않는 경우
-                        dp[i][c] = Math.max(dp[i-1][c-cost] + memory, dp[i-1][c]);
-                    }
-                    else
-                        dp[i][c] = dp[i-1][c];
-                }
-                if(dp[i][c] >= m){
-                    min = Math.min(min, c);
+            for(int c = 10000; c>=cost; c--){
+                if(dp[c - cost] + memory > dp[c]){
+                    dp[c] = dp[c - cost] + memory;
                 }
             }
-
         }
 
+        int min = Integer.MAX_VALUE;
+
+        for(int i =0; i<10001; i++){
+            if(dp[i] >= target){
+                min = i;
+                break;
+            }
+        }
         System.out.println(min);
     }
-
-
 
 }
