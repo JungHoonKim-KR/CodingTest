@@ -1,48 +1,41 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main {
 
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int n = Integer.parseInt(br.readLine());
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        Long arr[] = new Long[n];
-        for (int i = 0; i < n; i++) {
-            arr[i] = Long.parseLong(st.nextToken());
-        }
+        int arr[];
+        arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
         Arrays.sort(arr);
-
-        int left = 0, right = arr.length - 1;
-        long sum = 2000000000;
-        int resultLeft = 0;
-        int resultRight = 0;
+        int left = 0, right = n-1;
+        int min = Integer.MAX_VALUE;
+        int minL=0, minR=0;
         while(left < right){
-            if(Math.abs(arr[left] + arr[right]) < sum){
-                resultLeft = left;
-                resultRight = right;
-                sum = Math.abs(arr[left] + arr[right]);
+            int sum = arr[left] + arr[right];
 
+            if(Math.abs(min) > Math.abs(sum)){
+                min = sum;
+                minL = left;
+                minR = right;
             }
 
-            if(sum ==0)
-                break;
-            if(arr[left] + arr[right] < 0){
+            if(sum > 0){
+                right--;
+            }
+            else if(sum <0){
                 left++;
             }
-            else right--;
-
+            else break;
         }
 
-        if(resultLeft < resultRight)
-            System.out.println(arr[resultLeft] + " "+arr[resultRight]);
-        else
-            System.out.println(arr[resultRight] + " "+arr[resultLeft]);
+        System.out.print(arr[minL]+" "+arr[minR]);
+
 
     }
 
