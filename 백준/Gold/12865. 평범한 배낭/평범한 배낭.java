@@ -2,38 +2,43 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
+    static class Item{
+        int g, v;
+        Item(int g, int v){
+            this.g = g;
+            this.v = v;
+        }
+    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
-        int w = Integer.parseInt(st.nextToken());
-        // 0 : 무게, 1 : 가치
-        int item[][] = new int[n][2];
-        int knapback[][] = new int[n][w+1];
-        for(int i =0; i<n; i++){
+        int g = Integer.parseInt(st.nextToken());
+        Item list[] =new Item[n+1];
+        list[0] = new Item(0,0);
+        for(int i =1; i<=n; i++){
             st = new StringTokenizer(br.readLine());
-            item[i] = new int[]{Integer.parseInt(st.nextToken()),Integer.parseInt(st.nextToken())};
+            list[i] = new Item(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
         }
-
-        // 0~n-1번 아이템까지 총 배낭 무게에 맞게 검사
-        // 물건
-        for(int i =0; i<n; i++){
-            // 배낭 수용량
-            for(int weight=1; weight<=w; weight++){
-                if(item[i][0] <= weight){
-                    // 첫 물건일 때
-                    if(i==0){
-                        knapback[i][weight] = item[i][1];
-                    }
-                    else{
-                        knapback[i][weight] = Math.max(knapback[i-1][weight], knapback[i-1][weight - item[i][0]] + item[i][1]);
-                    }
+        Arrays.sort(list, (i1, i2)->{
+            return Integer.compare(i1.g, i2.g);
+        });
+        int dp[][] = new int[n+1][g+1];
+        for(int i = 1; i<=n; i++){
+            for(int j=1; j<=g; j++){
+                Item cur = list[i];
+                if(cur.g <= j){
+                    dp[i][j] = Math.max(cur.v,Math.max(dp[i-1][j], dp[i-1][j-cur.g]+cur.v));
                 }
-                else if(i!=0)knapback[i][weight] = knapback[i-1][weight];
+                else dp[i][j] = dp[i-1][j];
             }
         }
-        System.out.println(knapback[n-1][w]);
+        System.out.print(dp[n][g]);
+
     }
+
+
+
 }
