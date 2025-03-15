@@ -40,7 +40,6 @@ A 나라와 B 나라가 싸우고 있는 이 세계는 2 차원 공간으로 이
 </ul>
 
 <hr>
-
 <h5>입출력 예</h5>
 <table class="table">
         <thead><tr>
