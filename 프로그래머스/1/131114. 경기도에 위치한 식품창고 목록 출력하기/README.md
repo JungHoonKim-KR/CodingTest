@@ -19,7 +19,6 @@ Empty
 2025년 02월 26일 22:49:44
 
 ### 문제 설명
-
 <p>다음은 식품창고의 정보를 담은 <code>FOOD_WAREHOUSE</code> 테이블입니다. <code>FOOD_WAREHOUSE</code> 테이블은 다음과 같으며 <code>WAREHOUSE_ID</code>, <code>WAREHOUSE_NAME</code>, <code>ADDRESS</code>, <code>TLNO</code>, <code>FREEZER_YN</code>는 창고 ID, 창고 이름, 창고 주소, 전화번호, 냉동시설 여부를 의미합니다.</p>
 <table class="table">
         <thead><tr>
