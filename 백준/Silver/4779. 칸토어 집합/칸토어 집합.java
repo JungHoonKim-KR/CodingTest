@@ -1,41 +1,60 @@
 import java.io.*;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 public class Main {
-    private static StringBuilder result= new StringBuilder();
-    private static void fun(String s, int n){
-        int num = n/3;
-        if(num ==1){
-            result.append(s.substring(0,num));
-        }
-        else {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < num; i++)
-                sb.append(" ");
-            fun(s.substring(0, num), num);
-            fun(String.valueOf(sb), num);
-            fun(s.substring(num * 2, num * 3), num);
-        }
-    }
+    static StringBuilder sb;
     public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         String line;
-        while((line =bufferedReader.readLine())!=null){
+        while(!Objects.equals(line = br.readLine(), null)){
             int n = Integer.parseInt(line);
-            if(n == 0 )bufferedWriter.write("-\n");
+
+            if (n == 0){
+                bw.write("-"+"\n");
+            }
             else{
-                int num = (int) Math.pow(3,n+1);
-                StringBuilder sb= new StringBuilder();
-                for(int i =0; i<num;i++){
-                    sb.append("-");
-                }
-                fun(String.valueOf(sb),num);
-                bufferedWriter.write(result+"\n");
-                result = new StringBuilder();
+
+                int N = (int)Math.pow(3, n);
+                sb = new StringBuilder();
+
+                divide(0, N-1);
+
+                bw.write(sb.toString()+"\n");
             }
         }
-        bufferedWriter.close();
+
+
+        bw.flush();
+        br.close();  // 입력 스트림 닫기
+        bw.close();  // 출력 스트림 닫기
+
     }
+
+    static void divide(int left, int right){
+        if((right - left) == 0){
+            //append
+            sb.append("-");
+            return;
+        }
+        int term = (right-left+1)/3;
+        int midStart = left + term;
+        int midEnd = midStart + term -1;
+
+        //1
+        divide(left, midStart-1);
+        // 2 공백 추가
+        for(int i =midStart; i<midEnd+1; i++){
+            sb.append(" ");
+        }
+        // 3
+        divide(midEnd+1, right);
+    }
+
+
 }
+
+
