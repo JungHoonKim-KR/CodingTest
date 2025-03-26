@@ -25,7 +25,7 @@ public class Main {
 
         for(int i=1; i<=n; i++){
             for(int j=1; j<=n; j++){
-                sum[i][j] = sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1] + arr[i][j];
+                arr[i][j] = arr[i-1][j] + arr[i][j-1] - arr[i-1][j-1] + arr[i][j];
             }
         }
 
@@ -36,7 +36,7 @@ public class Main {
             int x2 = Integer.parseInt(st.nextToken());
             int y2 = Integer.parseInt(st.nextToken());
 
-            int s = sum[x2][y2] - sum[x1-1][y2] - sum[x2][y1-1] + sum[x1-1][y1-1];
+            int s = arr[x2][y2] - arr[x1-1][y2] - arr[x2][y1-1] + arr[x1-1][y1-1];
 
             bw.write( s+"\n");
 
