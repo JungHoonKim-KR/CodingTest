@@ -22,6 +22,7 @@ public class Main {
         }
 
         long min = 0;
+        max++;
         while(min <max){
             long mid = min + (max - min)/2;
 
