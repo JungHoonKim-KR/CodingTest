@@ -1,61 +1,49 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-    static int blue = 0;
-    static int white = 0;
 
+public class Main {
+    static int arr[][];
+    static int blue=0;
+    static int white=0;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int n = Integer.parseInt(br.readLine());
-        char arr[][] = new char[n][n];
-        StringTokenizer st;
-        for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-            for(int j =0; j < n; j++) {
-                arr[i][j] = st.nextToken().charAt(0);
-            }
-        }
-        square(arr, 0, 0, n);
 
-        bw.write(white+"\n" + blue);
-        bw.flush();
-        br.close();
-        bw.close();
-    }
+        arr = new int[n][n];
 
-    static void square(char arr[][], int startY, int startX, int term) {
-
-        if (term == 1) {
-            if (arr[startY][startX] == '0') white++;
-            else blue++;
-            return;
-        }
-        char color;
-        if( (color = check(arr, startY, startX, term)) == 'x') {
-            square(arr, startY, startX, term / 2);
-            square(arr, startY + term / 2, startX, term / 2);
-            square(arr, startY, startX + term / 2, term / 2);
-            square(arr, startY + term / 2, startX + term / 2, term / 2);
+        for(int i =0; i<n; i++){
+            arr[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         }
 
-        else if(color == '0') white++;
-        else blue++;
+
+        find(0,0,n);
+
+        System.out.println(white);
+        System.out.println(blue);
 
 
     }
 
-    static char check(char arr[][], int startY, int startX, int term) {
-        char color  = arr[startY][startX];
-        for(int i =startY; i<startY+term; i++) {
-            for(int j =startX; j<startX+term; j++) {
-                if(color != arr[i][j]) {
-                    return 'x';
+    static void find(int x, int y, int weight){
+        int target = arr[x][y];
+        for(int i=x; i<x+weight; i++){
+            for(int j=y; j<y+weight; j++){
+                if(arr[i][j] != target){
+                    int newWeight = weight/2;
+                    find(x,y,newWeight);
+                    find(x+newWeight,y,newWeight);
+                    find(x,y+newWeight,newWeight);
+                    find(x+newWeight,y+newWeight,newWeight);
+                    return;
                 }
             }
         }
-        return color;
+        if(target==0)
+            white++;
+        else blue++;
     }
+
 }
