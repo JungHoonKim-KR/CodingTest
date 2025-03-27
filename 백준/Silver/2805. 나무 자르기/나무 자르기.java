@@ -1,52 +1,45 @@
 import java.io.*;
-import java.util.StringTokenizer;
+import java.util.*;
+
 
 public class Main {
+    static int histogram[];
+    static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         StringTokenizer st = new StringTokenizer(br.readLine());
-
         int n = Integer.parseInt(st.nextToken());
-        long m = Long.parseLong(st.nextToken());
-
-        long trees[] = new long [n];
+        int m = Integer.parseInt(st.nextToken());
+        long arr[] = new long[n];
 
         long max = 0;
         st = new StringTokenizer(br.readLine());
         for(int i =0; i<n; i++){
-            long tree = Long.parseLong(st.nextToken());
-            max = Math.max(max, tree);
-            trees[i] = tree;
+            arr[i] = Integer.parseInt(st.nextToken());
+            max = Math.max(max, arr[i]);
         }
 
         long min = 0;
+        while(min <max){
+            long mid = min + (max - min)/2;
 
-        // mid의 길이가 나무를 자룰 H의 길이임. 그럼 나무는 tree - H 만큼의 길이를 만듦.
-        // Tree-H의 합이 h를 만족하는지
-        // H가 최대가 되어야 하니 UpperBound
-        max ++;
-        while(min < max){
-            long mid = (min + max) /2;
-            long length = 0;
-            for(long tree : trees){
-                if(tree - mid > 0)
-                    length += tree - mid;
+            long count=0;
+            for(long line : arr){
+               if(line > mid) count+= line - mid;
             }
-            // 자른 길이의 합이 목표 보다 작다 == H를 줄여야 함
-            if(length < m){
-                max = mid;
-            }
-            else min = mid+1;
+            if(count>=m)
+                min = mid+1;
+            else max = mid;
         }
 
-        // min max가 엇갈렸을 때 min은 최적의 H의 오른쪽에 위치함(UpperBound)
-        System.out.println(min -1);
+        System.out.println(min-1);
+
+
+
 
 
     }
-
-
-
-
 
 }
