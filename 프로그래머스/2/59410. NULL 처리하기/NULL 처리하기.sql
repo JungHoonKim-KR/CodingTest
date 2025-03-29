@@ -1,6 +1,8 @@
 -- 코드를 입력하세요
 SELECT ANIMAL_TYPE,
-    IFNULL(NAME, 'No name') as name,
+    CASE 
+    when NAME IS null then 'No name'
+    else NAME end as NAME
+    ,
     SEX_UPON_INTAKE
-    
-from ANIMAL_INS 
+from ANIMAL_INS
