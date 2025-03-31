@@ -42,3 +42,37 @@
 
  <p>첫째 줄에 모든 폭발이 끝난 후 남은 문자열을 출력한다.</p>
 
+### 회고
+
+처음에
+```java
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String s = br.readLine();
+        String bomb = br.readLine();
+        String[] split;
+        StringBuilder sb = new StringBuilder();
+        while (s.contains(bomb)){
+
+            split = s.split(bomb);
+            sb.setLength(0);
+
+            if(split.length==0){
+                s = "FRULA";
+                break;
+            }
+
+            for(int i =0; i<split.length;i++){
+                sb.append(split[i]);
+            }
+            s = sb.toString();
+        }
+
+        System.out.println(s);
+    }
+}
+```
+
+이렇게 split을 이용했는데, split은 매번 사용할 때마다 arr를 복사하기 때문에 비용이 많이들고 또한 해당 코드에서 sb를 반복적으로 초기화하기 때문에 비용이 많이 드는 코드라고 한다.
