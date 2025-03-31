@@ -19,7 +19,7 @@ public class Main {
                }
             }
         }
-        if (sb.isEmpty())
+        if (sb.length() ==0)
             System.out.println("FRULA");
         else System.out.println(sb);
 
