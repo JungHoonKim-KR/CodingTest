@@ -1,62 +1,54 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    static int goX[]={-1, 0, 1, 0};
-    static int goY[]={0, -1, 0, 1};
-    static int arr[][];
+    static int goX[] = {-1, 0, 1, 0};
+    static int goY[] = {0, -1, 0, 1};
+    static char arr[][];
     static boolean visit[][];
+    static StringBuilder sb = new StringBuilder();
+    static List<Integer> result = new ArrayList<>();
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new BufferedReader(new InputStreamReader(System.in)));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int node = Integer.parseInt(st.nextToken());
 
-        int n = Integer.parseInt(br.readLine());
-        arr = new int[n][n];
-        visit = new boolean[n][n];
-        ArrayList<Integer> town = new ArrayList<>();
-
-        for(int i =0; i<n; i++){
-            String s = br.readLine();
-            for(int j=0; j<n; j++){
-                arr[i][j] = s.charAt(j) - '0';
-            }
+        arr = new char[node][node];
+        visit = new boolean[node][node];
+        for (int i = 0; i < node; i++) {
+            arr[i] = br.readLine().toCharArray();
         }
-        for(int i =0; i<n; i++){
-            for(int j =0; j<n; j++){
-                if(arr[i][j] == 1 && !visit[i][j]){
-                    town.add(dfs(i,j));
+        int count = 0;
+        for (int i = 0; i < node; i++) {
+            for (int j = 0; j < node; j++) {
+                if (arr[i][j] == '1' && !visit[i][j]) {
+                    result.add(dfs(i,j));
+                    count++;
                 }
             }
         }
-        town.sort(Comparator.naturalOrder());
-        sb.append(town.size()+"\n");
-        for(int t : town){
-            sb.append(t+"\n");
+        result.sort(Comparator.naturalOrder());
+        System.out.println(count);
+        for(int r : result){
+            sb.append(r).append("\n");
         }
         System.out.println(sb);
-
     }
 
-    static int dfs(int x, int y){
-        int result=0;
-        if(!visit[x][y]){
-            visit[x][y] = true;
-            result = 1;
-            for(int i =0 ; i<4; i++){
-                int moveX = x + goX[i];
-                int moveY = y+goY[i];
-                if(moveX <0 || moveY <0 || moveX>arr.length-1 || moveY>arr[0].length-1 || arr[moveX][moveY] == 0)
-                    continue;
+    static int dfs(int x, int y) {
+        visit[x][y] = true;
+        int result = 1;
+        for (int i = 0; i < 4; i++) {
+            int moveX = goX[i] + x;
+            int moveY = goY[i] + y;
 
-                result += dfs(moveX, moveY);
-
+            if (moveX < 0 || moveX >= arr.length || moveY < 0 || moveY >= arr[0].length || visit[moveX][moveY] || arr[moveX][moveY] == '0') {
+                continue;
             }
+
+            result += dfs(moveX, moveY);
         }
         return result;
     }
-
-
 
 }
