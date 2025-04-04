@@ -1,78 +1,59 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    static class Point {
-        int x, y;
-
-        Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
+    static StringBuilder sb = new StringBuilder();
+    static int goX[] = {-1, 0, 1, 0};
+    static int goY[] = {0, -1, 0, 1};
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-
-        int gox[] = {-1, 0 ,1, 0};
-        int goY[] = {0, 1 ,0 ,-1};
+        BufferedReader br = new BufferedReader(new BufferedReader(new InputStreamReader(System.in)));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int x = Integer.parseInt(st.nextToken());
+
         int y = Integer.parseInt(st.nextToken());
+        int x = Integer.parseInt(st.nextToken());
 
-        int unripeCount=0, max=0;
-        int map[][] = new int[y][x];
-        boolean visit [][] = new boolean[y][x];
-        Queue<Point> queue = new LinkedList<>();
-        for(int i =0; i<y; i++){
+        int arr[][] = new int[x][y];
+        int map[][] = new int[x][y];
+//        boolean visit[][] = new boolean[x][y];
+        int unripedCount = 0;
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < x; i++) {
             st = new StringTokenizer(br.readLine());
-            for(int j =0; j<x; j++){
-                int stance = Integer.parseInt(st.nextToken());
-                if(stance == 1){
-                    queue.add(new Point(j,i));
-                    visit[i][j] = true;
-                }
-                else if(stance == 0){
-                    unripeCount++;
-                }
-                map[i][j] = stance;
+            for (int j = 0; j < y; j++) {
+                int num = Integer.parseInt(st.nextToken());
+                arr[i][j] = num;
+                if (num == 0)
+                    unripedCount++;
+                else if (num == 1)
+                    queue.add(new int[]{i, j});
             }
         }
 
-        //1: 출발지, -1: 막힌 길: 0: 아직 안 간 길
+        int max = 1;
+        while (unripedCount > 0 && !queue.isEmpty()) {
+            int cur[] = queue.poll();
+            for (int i = 0; i < 4; i++) {
+                int moveX = goX[i] + cur[0];
+                int moveY = goY[i] + cur[1];
 
-        while(unripeCount>0 && !queue.isEmpty()){
-            Point poll = queue.poll();
-
-            for(int i =0; i<4; i++){
-                int moveX = poll.x + gox[i];
-                int moveY = poll.y + goY[i];
-
-                if(moveX<0 || moveX>=x || moveY<0 || moveY>=y || map[moveY][moveX] == -1 || visit[moveY][moveX])
+                if (moveX < 0 || moveX >= x || moveY < 0 || moveY >= y || arr[moveX][moveY] == -1 || arr[moveX][moveY] >= 1) {
                     continue;
-
-                if(--unripeCount == 0){
-                    max = map[poll.y][poll.x];
-                    break;
                 }
-                queue.add(new Point(moveX, moveY));
-                visit[moveY][moveX] = true;
-                map[moveY][moveX] = map[poll.y][poll.x] + 1;
+                unripedCount--;
+                arr[moveX][moveY] = arr[cur[0]][cur[1]] + 1;
+                max = Math.max(arr[moveX][moveY], max);
+                queue.add(new int[]{moveX, moveY});
             }
 
         }
-
-        if(unripeCount !=0){
+        if (unripedCount != 0) {
             System.out.println(-1);
-        }
-        else{
-            System.out.println(max);
-        }
-
+        } else
+            System.out.println(max - 1);
 
     }
+
+
 }
