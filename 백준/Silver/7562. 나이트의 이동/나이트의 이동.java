@@ -1,62 +1,51 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    static class Point {
-        int x, y;
-
-        Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
+    static StringBuilder sb = new StringBuilder();
+    static int goX[] = {-1, -2, -1,-2,1,2,1,2};
+    static int goY[] = {-2,-1,2,1,-2,-1,2,1};
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-
+        BufferedReader br = new BufferedReader(new BufferedReader(new InputStreamReader(System.in)));
         int tc = Integer.parseInt(br.readLine());
-        int gox[] = {-2, -2, -1, -1, 1, 1, 2, 2};
-        int ogY[] = {1, -1, 2, -2, 2, -2, 1, -1};
 
-        while (tc-- > 0) {
+        while (tc--> 0) {
+            //입력
             int n = Integer.parseInt(br.readLine());
-
-            boolean[][] visit = new boolean[n][n];
-            int map[][] = new int[n][n];
-
+            int visit[][] = new int[n][n];
             StringTokenizer st = new StringTokenizer(br.readLine());
-            Point curP = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            int x1 = Integer.parseInt(st.nextToken());
+            int y1 = Integer.parseInt(st.nextToken());
 
             st = new StringTokenizer(br.readLine());
-            Point targetP = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            int x2 = Integer.parseInt(st.nextToken());
+            int y2 = Integer.parseInt(st.nextToken());
 
-            Queue<Point> queue = new LinkedList<>();
-            queue.add(curP);
-            visit[curP.y][curP.x] = true;
-            while (!queue.isEmpty()) {
-                Point poll = queue.poll();
+            Queue<int[]>queue = new LinkedList<>();
+            queue.add(new int[]{x1,y1});
 
-                if(poll.x == targetP.x && poll.y == targetP.y) {
-                    sb.append(map[poll.y][poll.x] + "\n");
+            while(!queue.isEmpty()){
+                int []cur = queue.poll();
+                if(cur[0] == x2 && cur[1] == y2){
                     break;
                 }
 
-                for(int i =0; i<8; i++){
-                    int moveX = poll.x + gox[i];
-                    int moveY = poll.y + ogY[i];
-
-                    if(moveX<0 || moveX>n-1 || moveY<0 || moveY>n-1 || visit[moveY][moveX])
-                        continue;
-
-                    queue.add(new Point(moveX, moveY));
-                    map[moveY][moveX] = map[poll.y][poll.x] + 1;
-                    visit[moveY][moveX] = true;
+                    for(int i =0; i<8; i++){
+                        int moveX = cur[0]+goX[i];
+                        int moveY = cur[1] + goY[i];
+                        if(moveX<0 || moveX>=n || moveY<0 || moveY>=n || visit[moveX][moveY]!=0){
+                            continue;
+                        }
+                        visit[moveX][moveY] = visit[cur[0]][cur[1]] + 1;
+                        queue.add(new int[]{moveX,moveY});
+                    }
                 }
+            sb.append(visit[x2][y2]+"\n");
+
             }
-        }
         System.out.println(sb);
+
     }
+
+
 }
