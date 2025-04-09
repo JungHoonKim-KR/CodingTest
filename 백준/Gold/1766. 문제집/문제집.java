@@ -1,53 +1,51 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-
-
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
+        BufferedReader br  = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
+
         int indegree[] = new int[n+1];
-        List<List<Integer>>graph = new LinkedList<>();
 
-        for(int i =0; i<=n; i++){
-            graph.add(new LinkedList<>());
-        }
-
-        for(int i = 0; i<m; i++){
-            st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
-            graph.get(from).add(to);
-            indegree[to]++;
-        }
-
-        // indegree가 0인 노드 넣기
-        PriorityQueue<Integer>pq = new PriorityQueue<>();
-        //초기값 찾기
+        ArrayList<Integer> graph[] = new ArrayList[n+1];
         for(int i =1; i<=n; i++){
-            if(indegree[i]==0)
-                pq.add(i);
+            graph[i] = new ArrayList<>();
         }
-        while(!pq.isEmpty()){
-            Integer cur = pq.poll();
-            bw.write(cur+" ");
-            // 해당 노드와 연결된 노드 확인
-            if(!graph.get(cur).isEmpty()){
-                for(int c : graph.get(cur)){
-                    indegree[c]--;
-                    if(indegree[c]==0)
-                        pq.add(c);
+
+        for(int i=1; i<=m; i++){
+            st = new StringTokenizer(br.readLine());
+
+            int first = Integer.parseInt(st.nextToken());
+            int second = Integer.parseInt(st.nextToken());
+
+            graph[first].add(second);
+            indegree[second]++;
+        }
+
+        PriorityQueue<Integer>q = new PriorityQueue<>((o1,o2)->{
+            return Integer.compare(o1,o2);
+        });
+        for(int i =1; i<=n; i++){
+            if(indegree[i] == 0){
+                q.add(i);
+            }
+        }
+
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            sb.append(cur+" ");
+            for(int node : graph[cur]){
+                if(--indegree[node] == 0){
+                    q.add(node);
                 }
             }
-
         }
-        bw.flush();
 
-
+        System.out.println(sb);
     }
 }
