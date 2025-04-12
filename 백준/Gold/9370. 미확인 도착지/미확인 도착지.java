@@ -38,9 +38,12 @@ public class Main {
             ArrayList<Integer> result = new ArrayList<>();
             for(int i =0; i<k; i++){
                 int target = Integer.parseInt(br.readLine());
-                int path1 = func(n,start,cross1) + func(n,cross1, cross2) + func(n,cross2,target);
-                int path2 = func(n,start,cross2) + func(n,cross2, cross1) + func(n,cross1,target);
-                int path = func(n,start,target);
+                int dist1[] = func(n, start);
+                int dist2[] = func(n,cross1);
+                int dist3[] = func(n, cross2);
+                int path1 = dist1[cross1] + dist2[cross2] + dist3[target];
+                int path2 = dist1[cross2] + dist3[cross1] + dist2[target];
+                int path = dist1[target];
                 if(path == path1 || path == path2){
                     result.add(target);
                 }
@@ -56,7 +59,7 @@ public class Main {
         System.out.println(sb);
     }
 
-    static int func(int n , int start, int end){
+    static int[] func(int n , int start){
         visit = new boolean[n+1];
         int distance[] = new int[n+1];
         Arrays.fill(distance, Integer.MAX_VALUE);
@@ -79,7 +82,7 @@ public class Main {
 
             }
         }
-        return distance[end];
+        return distance;
     }
 
 
