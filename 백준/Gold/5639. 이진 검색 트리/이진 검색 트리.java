@@ -1,11 +1,17 @@
 import java.util.*;
 import java.io.*;
+class Node{
+    int val;
+    Node left, right;
+    Node(int val){
+        this.val = val;
+    }
+}
+
 
 public class Main {
-    static int globalIndex = 0;
     static Map<Integer, int[]> tree = new HashMap<>();
     static ArrayList<Integer> list = new ArrayList<>();
-    static int root;
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
@@ -14,35 +20,39 @@ public class Main {
         while ((input = br.readLine()) != null) {
             list.add(Integer.parseInt(input));
         }
-        root = list.get(0);
-        buildOrder(Integer.MAX_VALUE, root);
+        Stack<Node>stack = new Stack<>();
+        Node root = new Node(list.get(0));
+        stack.push(root);
+
+        for(int i =1; i<list.size(); i++){
+            Node cur = new Node(list.get(i));
+
+            if(stack.peek().val > cur.val){
+                stack.peek().left = cur;
+            }
+            else{
+                Node parent = null;
+                // isEmpty()가 true면 루트까지 올라왔다는 것.
+                while(!stack.isEmpty() && stack.peek().val < cur.val){
+                    parent = stack.pop();
+                }
+                parent.right = cur;
+            }
+            stack.push(cur);
+        }
         postOrder(root);
+
         System.out.println(sb);
 
     }
 
-    static void buildOrder(int parent, int cur) {
-        tree.putIfAbsent(cur, new int[2]);
 
-        if (globalIndex + 1 < list.size() && list.get(globalIndex + 1) < cur) {
-            int left = list.get(++globalIndex);
-            tree.get(cur)[0] = left;
-            buildOrder(cur, left);
 
-        }
-        if (globalIndex + 1 < list.size() && list.get(globalIndex + 1) > cur && list.get(globalIndex + 1) < parent) {
-            int right = list.get(++globalIndex);
-            tree.get(cur)[1] = right;
-            buildOrder(parent, right);
-        }
-
-    }
-
-    static void postOrder(int n) {
-        if (tree.get(n)[0] != 0)
-            postOrder(tree.get(n)[0]);
-        if (tree.get(n)[1] != 0)
-            postOrder(tree.get(n)[1]);
-        sb.append(n + " ");
+    static void postOrder(Node cur) {
+        if (cur.left != null)
+            postOrder(cur.left);
+        if (cur.right != null)
+            postOrder(cur.right);
+        sb.append(cur.val + " ");
     }
 }
