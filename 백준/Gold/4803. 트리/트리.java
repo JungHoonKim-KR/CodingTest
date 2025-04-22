@@ -1,79 +1,70 @@
-import java.util.*;
 import java.io.*;
-
+import java.util.*;
 
 public class Main {
+    static List<Integer>[] graph;
+    static boolean[] visited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-        int testCase = 0;
+        int tc = 0;
+
         while (true) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int count = 0;
-
             int n = Integer.parseInt(st.nextToken());
             int m = Integer.parseInt(st.nextToken());
             if (n == 0 && m == 0) break;
+            tc++;
 
-            boolean visit[] = new boolean[n + 1];
-            ArrayList<Integer> graph[] = new ArrayList[n + 1];
-            testCase++;
-            for (int i = 0; i <= n; i++) {
-                graph[i] = new ArrayList<>();
-            }
+            graph = new ArrayList[n + 1];
+            visited = new boolean[n + 1];
+            for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
             for (int i = 0; i < m; i++) {
                 st = new StringTokenizer(br.readLine());
-                int first = Integer.parseInt(st.nextToken());
-                int second = Integer.parseInt(st.nextToken());
-                graph[first].add(second);
-                graph[second].add(first);
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+                graph[a].add(b);
+                graph[b].add(a);
             }
 
+            int treeCount = 0;
             Queue<int[]> q = new LinkedList<>();
-            // 시작 노드 선정
-
-
-            for (int start = 1; start <= n; start++) {
-                boolean isCycle = false, isRun = false;
-
-                if (!visit[start]) {
-                    isRun = true;
-                    q.add(new int[]{start, start});
-                    visit[start] = true;
-                    while (!q.isEmpty()) {
-                        int cur[] = q.poll();
-
-                        for (int next : graph[cur[0]]) {
-                            if (!visit[next]) {
-                                visit[next] = true;
-                                q.add(new int[]{next, cur[0]});
-                            } else if (next != cur[1])
-                                isCycle = true;
-                        }
-                    }
+            for (int i = 1; i <= n; i++) {
+                if (!visited[i]) {
+                    boolean isTree = bfs(i, q);
+                    if (isTree) treeCount++;
                 }
-                if (isRun && !isCycle)
-                    count++;
             }
 
-            result(sb, testCase, count);
+            sb.append("Case ").append(tc).append(": ");
+            if (treeCount == 0)       sb.append("No trees.\n");
+            else if (treeCount == 1)  sb.append("There is one tree.\n");
+            else                       sb.append("A forest of ").append(treeCount).append(" trees.\n");
         }
-        System.out.println(sb);
-
+        System.out.print(sb);
     }
 
-    static void result(StringBuilder sb, int tc, int count) {
-        sb.append("Case " + tc + ": ");
+    // 시작 노드, 그리고 큐는 재사용
+    static boolean bfs(int start, Queue<int[]> q) {
+        visited[start] = true;
+        q.clear();
+        q.add(new int[]{start, 0}); // {현재, 부모}
 
-        if (count == 0) {
-            sb.append("No trees.\n");
-        } else if (count == 1) {
-            sb.append("There is one tree.\n");
-        } else {
-            sb.append("A forest of " + count + " trees.\n");
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            for (int nxt : graph[cur[0]]) {
+                if (!visited[nxt]) {
+                    visited[nxt] = true;        // enqueue 시점에 방문 처리
+                    q.add(new int[]{nxt, cur[0]});
+                } else if (nxt != cur[1]) {
+                    // 이미 방문된 노드이면서, 부모가 아닌 경우 → 사이클
+                    q.clear();                  
+                    return false;
+                }
+            }
         }
-
+        return true;
     }
-
 }
