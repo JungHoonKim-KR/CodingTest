@@ -1,43 +1,36 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Stack;
-
+import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws NumberFormatException, IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
+        StringBuilder sb = new StringBuilder();
         while (true){
-            String s = br.readLine();
-            if(s.equals("."))break;
 
-            if(isBalanced(s.toCharArray())) bw.write("yes\n");
-            else bw.write("no\n");
+            char[] charArr = br.readLine().toCharArray();
+            if(charArr.length==1)
+                break;
+            if(isBalanced(charArr))sb.append("yes\n");
+            else sb.append("no\n");
 
         }
-        bw.flush();
+        System.out.println(sb);
     }
-
-    static boolean isBalanced(char[] charArray){
-        Stack<Character> stack = new Stack<>();
-        for(char c : charArray) {
-            if(c == '[' || c=='(')
+    static boolean isBalanced(char charArr[]){
+        Stack<Character>stack = new Stack();
+        for(char c : charArr){
+            if(c =='(' || c=='[')
                 stack.push(c);
-            else if(c ==')'){
-                if(stack.isEmpty() || stack.pop() != '('){
+            else if(c==')'){
+                if(stack.isEmpty() || stack.pop()!='(')
                     return false;
-                }
             }
             else if(c==']'){
-                if(stack.isEmpty() || stack.pop() != '['){
+                if(stack.isEmpty() || stack.pop()!='[')
                     return false;
-                }
             }
         }
         return stack.isEmpty();
     }
 }
-
-
