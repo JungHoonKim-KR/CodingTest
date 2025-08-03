@@ -26,12 +26,7 @@ public class Main {
 
         }
 
-        if(k >0){
-            for(int i = 0; i<k; i++){
-                queue.removeLast();
-            }
-        }
-        while(!queue.isEmpty()){
+        while(queue.size() > k){
             sb.append(queue.removeFirst());
         }
         System.out.println(sb);
