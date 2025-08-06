@@ -4,35 +4,33 @@ import java.util.*;
 public class Main {
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws NumberFormatException, IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int n = Integer.parseInt(br.readLine());
-        int arr[];
-        arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int arr[] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        Arrays.sort(arr);
         int target = Integer.parseInt(br.readLine());
 
-        Arrays.sort(arr);
-        int left = 0, right = n-1, count=0;
-        while(left < right){
-            int sum = arr[left] + arr[right];
-
+        int start = 0;
+        int end = n-1;
+        int count=0;
+        while(start < end){
+            int sum = arr[start] + arr[end];
             if(sum == target){
-                count ++;
-                left++;
-                right --;
+                count++;
+                start++;
             }
-            else if(sum > target){
-                right--;
-            }
-            else left++;
+            else if(sum < target) start ++;
+            else end--;
         }
+        System.out.println(count);
 
-        System.out.print(count);
 
 
     }
 
 
 }
+
+
