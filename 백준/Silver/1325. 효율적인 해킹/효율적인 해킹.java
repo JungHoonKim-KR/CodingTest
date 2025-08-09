@@ -1,75 +1,58 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-
-    static int N, M, A, B, hackingResult[], max;
-    static List<Integer>[] graph;
-    static boolean[] visited;
+    static List<Integer> graph[];
+    static boolean visit[];
+    static int maxArr[];
+    static int n,m,c,p,max=0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-
-        graph = new List[N + 1];
-
-        for (int i = 1; i <= N; i++) {
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        graph = new List[n + 1];
+        maxArr = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
             graph[i] = new ArrayList<>();
         }
-
-        for (int i = 0; i < M; i++) {
+        for (int i = 0; i < m; i++) {
             st = new StringTokenizer(br.readLine());
-
-            A = Integer.parseInt(st.nextToken());
-            B = Integer.parseInt(st.nextToken());
-
-            graph[A].add(B);
+            c = Integer.parseInt(st.nextToken());
+            p = Integer.parseInt(st.nextToken());
+            graph[c].add(p);
         }
 
-        hackingResult = new int[N + 1]; // hackingResult[i] : i번컴퓨터해킹시 해킹가능한총컴퓨터수
-
-        for (int i = 1; i <= N; i++) {
-            visited = new boolean[N + 1];
-            Queue<Integer> q = new LinkedList<>();
-            q.offer(i);
-            visited[i] = true;
-
-            while (!q.isEmpty()) {
-                int cur = q.poll();
-
+        for (int i = 1; i <= n; i++) {
+            visit = new boolean[n + 1];
+            Queue<Integer> queue = new LinkedList<>();
+            queue.add(i);
+            visit[i] = true;
+            while (!queue.isEmpty()) {
+                int cur = queue.poll();
                 for (int next : graph[cur]) {
-                    if (!visited[next]) {
-                        visited[next] = true;
-                        q.offer(next);
-                        hackingResult[next]++;
+                    if (!visit[next]) {
+                        visit[next] = true;
+                        queue.add(next);
+                        maxArr[next]++;
                     }
                 }
             }
         }
-
-        for (int value : hackingResult) {
-            max = Math.max(max, value);
+        for (int v : maxArr) {
+            max = Math.max(max, v);
         }
 
-        for (int i = 1; i <= N; i++) {
-            if (hackingResult[i] == max) {
+        for (int i = 1; i <= n; i++) {
+            if (max == maxArr[i]) {
                 sb.append(i).append(" ");
             }
         }
-        sb.append("\n");
-
-        System.out.print(sb);
+        System.out.println(sb);
     }
 
+
 }
+
