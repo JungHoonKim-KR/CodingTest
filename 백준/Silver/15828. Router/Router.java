@@ -13,14 +13,17 @@ public class Main {
         while(!(input = br.readLine()).equals(String.valueOf(-1))){
             if(input.equals("0"))
                 q.poll();
-            else {
+            else if(q.size() < n){
                 q.add(input);
             }
-            if(q.size() >=n)
-                q.clear();
         }
-        for(String s : q)
-            sb.append(s+" ");
+        if(q.isEmpty())
+            sb.append("empty");
+        else{
+            for(String s : q)
+                sb.append(s+" ");
+        }
+
         System.out.println(sb);
 
 
