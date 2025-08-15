@@ -1,154 +1,127 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 class Node{
-    int no,x,y;
-    Node(int no,int x, int y){
-        this.no=no;
+    int no, x, y;
+    Node(int no, int x, int y){
+        this.no = no;
         this.x = x;
         this.y = y;
-
     }
 }
-
 class Edge{
-    Node from, to;
+    Node n1, n2;
     int distance;
-    Edge(Node from, Node to, int distance){
-        this.from = from;
-        this.to = to;
+    Edge(Node n1, Node n2, int distance){
+        this.n1 = n1;
+        this.n2 = n2;
         this.distance = distance;
     }
 }
-
 public class Main {
-    static int parent[];
-    static boolean visit[][];
-    static int arr[][];
-    static ArrayList<Node>nodeList = new ArrayList<>();
+    static int n, m, groupNumber, count, result;
+    static char[][] map;
+    static boolean[][] visit;
+    static int[][] go = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    static int[] parent;
+    static List<Node>nodeList = new ArrayList<>();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        map = new char[n][m];
         visit = new boolean[n][m];
-        // 지역의 개수
-        arr = new int[n][m];
-        for(int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < m; j++){
-                arr[i][j] = Integer.parseInt(st.nextToken());
+            for (int j = 0; j < m; j++) {
+                map[i][j] = st.nextToken().charAt(0);
             }
         }
-
-        int groupNumber = 0;
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(arr[i][j] != 0 && !visit[i][j]){
-                    buildIsland(i, j, ++groupNumber);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (map[i][j] == '1' && !visit[i][j]) {
+                    visit[i][j] = true;
+                    ++groupNumber;
+                    buildIsland(i,j);
                 }
             }
         }
 
+        PriorityQueue<Edge>edgeQueue = new PriorityQueue<>((e1, e2)->{
+            return e1.distance - e2.distance;
+        });
+
+        for(int i = 0; i< nodeList.size()-1; i++){
+            Node n1 = nodeList.get(i);
+            for(int j = i+1; j< nodeList.size(); j++){
+                Node n2 = nodeList.get(j);
+                if(n1.no != n2.no && (n1.x == n2.x || n1.y == n2.y) && isEdge(n1,n2)){
+                    int dist = 0;
+                    if(n1.x == n2.x){
+                        dist = Math.abs(n1.y - n2.y)-1;
+                    }
+                    else{
+                        dist = Math.abs(n1.x - n2.x)-1;
+                    }
+                    if(dist >=2)
+                        edgeQueue.add(new Edge(n1, n2, dist));
+                }
+            }
+        }
         parent = new int[groupNumber+1];
-        for(int i =1; i <= groupNumber; i++){
+        for(int i = 1; i<=groupNumber; i++){
             parent[i] = i;
         }
 
-
-        PriorityQueue<Edge>pq = new PriorityQueue<>((e1, e2)->{
-            return  e1.distance - e2.distance;
-        });
-
-        // n x n 으로 각 좌표끼리 검증한다
-        // 1. x, y 모두 다르면 continue
-        // 2. x 혹은 y 가 같은 경우, 거리가 2 이상이면 ok
-
-        for(int i = 0; i<nodeList.size()-1; i++){
-            Node node1 = nodeList.get(i);
-            for(int j = i+1; j<nodeList.size(); j++){
-                Node node2 = nodeList.get(j);
-                if((node1.x != node2.x && node1.y != node2.y) || node1.no == node2.no || isSameIsland(node1, node2))
-                    continue;
-
-
-                if(node1.x == node2.x){
-                    int distance = Math.abs(node1.y - node2.y)-1;
-                    if(distance>=2) pq.add(new Edge(node1,node2,distance));
-                }
-                else if(node1.y == node2.y){
-                    int distance = Math.abs(node1.x - node2.x)-1;
-                    if(distance>=2) pq.add(new Edge(node1,node2,distance));
-                }
+        while (!edgeQueue.isEmpty()){
+            Edge curEdge = edgeQueue.poll();
+            if(find(curEdge.n1.no) != find(curEdge.n2.no)){
+                union(curEdge.n1.no, curEdge.n2.no);
+                result += curEdge.distance;
+                count++;
             }
-
         }
+        System.out.println(count == groupNumber-1 ? result : -1);
+    }
 
-        int result =0;
-        int count=0;
-        while(!pq.isEmpty()){
-            Edge cur = pq.poll();
-            int fromNumber = cur.from.no;
-            int toNumber = cur.to.no;
-            if(isSameRoot(fromNumber, toNumber))
+    static void buildIsland(int startX, int startY) {
+        nodeList.add(new Node(groupNumber, startX, startY));
+
+        for(int i = 0; i<4; i++){
+            int moveX = startX + go[i][0];
+            int moveY = startY + go[i][1];
+            if(moveX <0 || moveX>=n || moveY<0 || moveY>=m || map[moveX][moveY] =='0' || visit[moveX][moveY])
                 continue;
-
-            union(fromNumber, toNumber);
-            result += cur.distance;
-            count++;
+            visit[moveX][moveY] = true;
+            buildIsland(moveX, moveY);
         }
-
-
-        System.out.println((count == groupNumber -1)? result : -1);
-
     }
-
-    static int goX[] = {-1, 0, 1, 0};
-    static int goY[] = {0, -1, 0, 1};
-
-    static void buildIsland(int x, int y, int groupNumber){
-        visit[x][y] = true;
-        arr[x][y] = groupNumber;
-        nodeList.add(new Node(groupNumber,x,y));
-        for(int i =0; i<4; i++){
-            int moveX = goX[i] + x;
-            int moveY = goY[i] + y;
-
-            if(moveX < 0 || moveX > arr.length-1 || moveY < 0 || moveY > arr[0].length-1 || arr[moveX][moveY]==0 || visit[moveX][moveY])
-                continue;
-            buildIsland(moveX, moveY, groupNumber);
-        }
-
-    }
-
-    static int find(int no){
-        if(no == parent[no]) return no;
-        else return parent[no] = find(parent[no]);
-    }
-    static boolean isSameIsland(Node n1, Node n2){
+    static boolean isEdge(Node n1, Node n2){
         if(n1.x == n2.x){
-            for(int y = Math.min(n1.y, n2.y) +1; y < Math.max(n1.y,n2.y); y++){
-                if(arr[n1.x][y] !=0)
-                    return true;
+            for(int y = Math.min(n1.y, n2.y)+1; y<Math.max(n1.y, n2.y); y++){
+                if(map[n1.x][y] == '1')
+                    return false;
             }
         }
-        else if(n1.y == n2.y){
-            for(int x = Math.min(n1.x, n2.x)+1; x < Math.max(n1.x, n2.x); x++){
-                if (arr[x][n1.y] !=0)
-                    return true;
+        if(n1.y == n2.y){
+            for(int x = Math.min(n1.x, n2.x)+1; x<Math.max(n1.x, n2.x); x++){
+                if(map[x][n1.y] == '1')
+                    return false;
             }
         }
-        return false;
+        return true;
+    }
+    static int find(int no){
+        if(parent[no] == no)return no;
+        return parent[no] = find(parent[no]);
+    }
+    static void union(int n1, int n2){
+        int p1 = find(n1);
+        int p2 = find(n2);
+        if(p1 != p2){
+            parent[p2] = p1;
+        }
     }
 
-
-    static boolean isSameRoot(int fromNumber, int toNumber){
-        return find(fromNumber) == find(toNumber);
-    }
-
-    static void union(int fromNumber, int toNumber){
-        parent[find(toNumber)] = find(fromNumber);
-    }
 }
