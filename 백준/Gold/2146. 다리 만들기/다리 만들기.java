@@ -1,115 +1,104 @@
 import java.io.*;
 import java.util.*;
 
-/*
- 1. 각 대륙의 노드들 대륙별로 넘버링
- 2. 각 대륙의 엣지 노드들 찾기 ( 각 노드에서 4방 탐색을 하여 한 방향이라도 0이 있으면 엣지)
- 3. 엣지 노드를 bfs 큐에 모두 넣고 가장 먼저 다른 대륙에 도착하면 최소 길이의 다리
- */
-class Node{
-    int groupNumber, x, y;
-    Node(int g, int x, int y){
-        groupNumber = g;
-        this.x = x;
-        this.y = y;
-    }
-}
-class Bridge{
-    Node node;
-    int length;
-    boolean[][]visit;
-    Bridge(Node node, int length, boolean[][]visit){
-        this.node = node;
-        this.length = length;
-        this.visit = visit;
-    }
-}
 public class Main {
-    static int n, groupNumber=1;
-    static int[][] map;
-    static boolean[][] visit;
-    static int[][] go = {{-1,0},{1,0},{0,1},{0,-1}};
-    static List<Node>nodeList = new ArrayList();
+    static int n, groupNumber, result = Integer.MAX_VALUE;
+    static int arr[][];
+    static int map[][][];
+    static boolean visit[][];
+    static int go[][] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    static Queue<int[]> queue;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n =Integer.parseInt(br.readLine());
-        map = new int[n][n];
+        n = Integer.parseInt(br.readLine());
 
-        for(int i = 0; i < n; i++){
+        arr = new int[n][n];
+        map = new int[n][n][2];
+        for (int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < n; j++){
-                map[i][j] = Integer.parseInt(st.nextToken());
+            for (int j = 0; j < n; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        // 1
+
         visit = new boolean[n][n];
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < n; j++){
-                if(!visit[i][j] && map[i][j] == 1){
-                    ++groupNumber;
-                    nodeList.add(new Node(groupNumber, i, j));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (!visit[i][j] && arr[i][j] != 0) {
                     visit[i][j] = true;
-                    map[i][j] = groupNumber;
-                    dfs(i, j);
+                    groupNumber++;
+                    arr[i][j] = groupNumber;
+                    buildIsland(i, j);
                 }
             }
         }
-        Queue<Bridge> q = new ArrayDeque<>();
-        // 2
-        for(Node node : nodeList){
-            if(isEdgeNode(node.x, node.y)){
-                q.add(new Bridge(node, 0, new boolean[n][n]));
+        queue = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (arr[i][j] != 0) {
+                    insertEdgeNode(i, j);
+                }
             }
         }
 
-        // 3
-//        visit = new boolean[n][n];
-        outer: while(!q.isEmpty()){
-            Bridge curBridge = q.poll();
-            Node curNode = curBridge.node;
-            curBridge.visit[curNode.x][curNode.y] = true;
-            for(int i = 0; i<4; i++){
-                int nextX = curBridge.node.x + go[i][0];
-                int nextY = curBridge.node.y + go[i][1];
-                if(nextX < 0 || nextX >= n || nextY < 0 || nextY >= n || map[nextX][nextY] == curNode.groupNumber || curBridge.visit[nextX][nextY])
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            for (int i = 0; i < 4; i++) {
+                int moveX = cur[0] + go[i][0];
+                int moveY = cur[1] + go[i][1];
+
+                if (moveX < 0 || moveX >= n || moveY < 0 || moveY >= n
+                        || map[cur[0]][cur[1]][0] == map[moveX][moveY][0]
+                        || map[cur[0]][cur[1]][0] == arr[moveX][moveY])
                     continue;
 
-                if(map[nextX][nextY] != 0 && map[nextX][nextY] != curNode.groupNumber){
-                    System.out.println(curBridge.length);
-                    break outer;
+                if (arr[moveX][moveY] == 0 && map[moveX][moveY][0] == 0) {
+                    map[moveX][moveY][0] = map[cur[0]][cur[1]][0];
+                    map[moveX][moveY][1] = map[cur[0]][cur[1]][1] + 1;
+                    queue.add(new int[]{moveX, moveY});
+                } else {
+                    result = Math.min(result, map[cur[0]][cur[1]][1] + map[moveX][moveY][1]);
                 }
-                curBridge.visit[nextX][nextY] = true;
-                q.add(new Bridge(new Node(curNode.groupNumber, nextX, nextY), curBridge.length+1, curBridge.visit));
+            }
+        }
+        System.out.println(result);
+
+    }
+
+    static void buildIsland(int startX, int startY) {
+        queue = new ArrayDeque<>();
+        queue.add(new int[]{startX, startY});
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            for (int i = 0; i < 4; i++) {
+                int moveX = cur[0] + go[i][0];
+                int moveY = cur[1] + go[i][1];
+
+                if (moveX < 0 || moveX >= n || moveY < 0 || moveY >= n || visit[moveX][moveY] || arr[moveX][moveY] == 0)
+                    continue;
+
+                visit[moveX][moveY] = true;
+                arr[moveX][moveY] = groupNumber;
+                queue.add(new int[]{moveX, moveY});
             }
         }
 
-
     }
-    static void dfs(int startX, int startY){
-        for(int i = 0; i<4; i++){
-            int nextX = startX + go[i][0];
-            int nextY = startY + go[i][1];
-            if (nextX < 0 || nextX >= n || nextY < 0 || nextY >= n || visit[nextX][nextY]|| map[nextX][nextY] == 0){
+
+    static void insertEdgeNode(int startX, int startY) {
+        for (int i = 0; i < 4; i++) {
+            int moveX = startX + go[i][0];
+            int moveY = startY + go[i][1];
+
+            if (moveX < 0 || moveX >= n || moveY < 0 || moveY >= n || map[moveX][moveY][0] != 0 || arr[moveX][moveY] != 0)
                 continue;
-            }
-            nodeList.add(new Node(groupNumber, nextX, nextY));
-            visit[nextX][nextY] = true;
-            // 다리 제작 시 도착 node가 같은 대륙인지 판단하는 자료
-            map[nextX][nextY] = groupNumber;
-            dfs(nextX, nextY);
+            map[moveX][moveY][0] = arr[startX][startY];
+            // 겹쳐도 상관 X
+            map[moveX][moveY][1] = 1;
+            queue.add(new int[]{moveX, moveY});
         }
     }
 
-    static boolean isEdgeNode(int startX, int startY){
-        for(int i  =0; i<4; i++){
-            int nextX = startX + go[i][0];
-            int nextY = startY + go[i][1];
-
-            if(nextX < 0 || nextX >= n || nextY < 0 || nextY >= n)
-                continue;
-            if(map[nextX][nextY] == 0){return true;}
-        }
-        return false;
-    }
 
 }
