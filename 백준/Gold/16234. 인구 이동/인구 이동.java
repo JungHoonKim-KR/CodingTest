@@ -11,7 +11,6 @@ public class Main {
     static int map[][];
     static int go[][] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
     static boolean[][] visit;
-    static Queue<int[]> mainQueue;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,8 +29,7 @@ public class Main {
             visit = new boolean[n][n];
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    if (!visit[i][j]) {
-                        mainQueue = new ArrayDeque<>();
+                    if (!visit[i][j] && canMove(i,j)) {
                         find(i, j);
                     }
                 }
@@ -43,11 +41,27 @@ public class Main {
         System.out.println(result);
     }
 
+    static boolean canMove(int startX, int startY) {
+        for (int i = 0; i < 4; i++) {
+            int moveX = startX + go[i][0];
+            int moveY = startY + go[i][1];
+            if (moveX < 0 || moveX >= n || moveY < 0 || moveY >= n || visit[moveX][moveY])
+                continue;
+
+            int gap = Math.abs(map[startX][startY] - map[moveX][moveY]);
+            if (gap >= l && gap <= r) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
     static void find(int startX, int startY) {
         Queue<int[]> q = new ArrayDeque<>();
+        Queue<int[]> mainQueue = new ArrayDeque<>();
         visit[startX][startY] = true;
         q.add(new int[]{startX, startY});
-        mainQueue.add(new int[]{startX, startY});
         while (!q.isEmpty()) {
             int[] cur = q.poll();
             for (int i = 0; i < 4; i++) {
@@ -66,14 +80,15 @@ public class Main {
             }
         }
 
-        if (mainQueue.size() >= 2) {
-            move();
+        if (!mainQueue.isEmpty()) {
+            mainQueue.add(new int[]{startX, startY});
+            move(mainQueue);
             isFind = true;
         }
 
     }
 
-    static void move() {
+    static void move(Queue<int[]> mainQueue) {
         int sum = 0;
         for (int[] cur : mainQueue) {
             sum += map[cur[0]][cur[1]];
