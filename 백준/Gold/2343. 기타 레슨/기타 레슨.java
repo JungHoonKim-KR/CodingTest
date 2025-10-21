@@ -29,7 +29,7 @@ public class Main {
             long mid = min + (max - min)/2;
             int count = getCount(mid);
 
-            if(count < M){
+            if(count <= M){
                 max = mid;
             }
             else{
@@ -55,6 +55,8 @@ public class Main {
             }
             sum += cur;
         }
+        
+        if(sum>0) count++;
         return count;
     }
 }
