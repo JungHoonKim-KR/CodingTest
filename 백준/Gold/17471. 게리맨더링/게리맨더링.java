@@ -11,7 +11,6 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-
         n = Integer.parseInt(br.readLine());
         people = new int[n+1];
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -36,8 +35,6 @@ public class Main {
         	dfs(1, i, new Stack());
         }
         System.out.println(min==Integer.MAX_VALUE ? -1 : min);
-        
-        
         
     }
     
