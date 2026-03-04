@@ -1,18 +1,21 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
 
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-
-    public static void main(String[] args) throws NumberFormatException, IOException {
+    static int num=1;
+    static int n;
+    static Stack<Integer>stack = new Stack<>();
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
+        n = Integer.parseInt(br.readLine());
 
-        int n = Integer.parseInt(br.readLine());
-        Stack<Integer>stack = new Stack();
-        int num = 1;
         for(int i = 1; i<=n; i++){
             int target = Integer.parseInt(br.readLine());
-
             while(num<=n){
                 if(!stack.isEmpty() && stack.peek() == target){
                     sb.append("-\n");
@@ -37,7 +40,7 @@ public class Main {
 
         }
         System.out.println(sb);
+        }
 
     }
 
-}
