@@ -1,50 +1,50 @@
 import java.io.*;
-import java.util.*;
+import java.util.Stack;
+
 public class Main {
-    public static void main(String[] args) throws NumberFormatException, IOException {
+    static Stack<Character>stackL = new Stack<>();
+    static Stack<Character>stackR = new Stack<>();
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        char[] input  = br.readLine().toCharArray();
+        char[] input = br.readLine().toCharArray();
+        for(char c : input) {
+
+            stackL.push(c);
+        }
+
         int n = Integer.parseInt(br.readLine());
-        Stack<Character> mainStack = new Stack<>();
-        Stack<Character> tempStack = new Stack<>();
 
-        for(char i : input) {
-            mainStack.push(i);
+        while (n-->0){
+            char[] cArr = br.readLine().toCharArray();
+            command(cArr);
         }
 
-        // L : tempStack.push(mainStack.pop())
-        // D : mainStack.push(tempStack.push())
-        // B : mainStack.pop()
-        // P $: mainStack.push()
-
-        while(n -->0){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            String command = st.nextToken();
-
-            if(command.equals("L") && !mainStack.isEmpty()){
-                tempStack.push(mainStack.pop());
-            }
-            else if(command.equals("D") && !tempStack.isEmpty()){
-                mainStack.push(tempStack.pop());
-            }
-            else if(command.equals("B") && !mainStack.isEmpty()){
-                mainStack.pop();
-            }
-            else if (command.equals("P")){
-                mainStack.push(st.nextToken().charAt(0));
-            }
+        for(char c : stackL) {
+            bw.write(c);
         }
-
-        while(!mainStack.isEmpty()){
-            tempStack.push(mainStack.pop());
+        while (!stackR.isEmpty()) {
+            bw.write(stackR.pop());
         }
-
-        while (!tempStack.isEmpty()){
-            sb.append(tempStack.pop());
+        bw.flush();
+        bw.close();
+        br.close();
+    }
+    static void command(char cArr[]){
+        if(cArr[0] == 'L' && !stackL.isEmpty()){
+            stackR.push(stackL.pop());
         }
-        System.out.println(sb);
-
+        else if(cArr[0]=='D' && !stackR.isEmpty()){
+            stackL.push(stackR.pop());
+        }
+        else if(cArr[0]=='B' && !stackL.isEmpty()){
+            stackL.pop();
+        }
+        else if(cArr[0]=='P'){
+            stackL.push(cArr[2]);
+        }
     }
 }
+
