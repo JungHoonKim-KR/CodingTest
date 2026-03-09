@@ -1,55 +1,54 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main {
-
-
+	static ArrayList<int[]>graph[];
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int INF = 100000;
-        boolean visit[] = new boolean[INF+1];
-        int arr[] = new int[INF+1];
-        int start = Integer.parseInt(st.nextToken());
-        int end = Integer.parseInt(st.nextToken());
-
-
-        Queue<Integer> q = new LinkedList<>();
-
-        q.add(start);
-        visit[start] = true;
-
-        while(!q.isEmpty()){
-            int cur = q.poll();
-            if(cur == end){
-                System.out.println(arr[end]);
-                return;
-            }
-
-            if(2*cur<=INF && !visit[cur*2]){
-                q.add(cur *2);
-                visit[cur*2] = true;
-                arr[cur*2] = arr[cur];
-            }
-            if(cur !=0 && !visit[cur-1]){
-                q.add(cur-1);
-                visit[cur-1] = true;
-                arr[cur-1] = arr[cur]+1;
-            }
-            if(cur != INF && !visit[cur+1]){
-                q.add(cur+1);
-                visit[cur+1] = true;
-                arr[cur+1] = arr[cur]+1;
-            }
-        }
-
-
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out)); 
+        
+        final int MAX = 100_000;
+    	StringTokenizer st = new StringTokenizer(br.readLine());
+    	
+    	int n = Integer.parseInt(st.nextToken());
+    	int m = Integer.parseInt(st.nextToken());
+    	
+    	PriorityQueue<int[]>queue = new PriorityQueue<>((o1, o2) -> {
+    		return o1[1] - o2[1];
+    	});
+    	boolean visited[] = new boolean[MAX+1];
+    	queue.add(new int[] {n,0});
+    	
+    	while(!queue.isEmpty()) {
+    		int cur[] = queue.poll();
+    		if(cur[0] == m) {
+    			System.out.println(cur[1]);
+    			return;
+    		}
+    		
+    		if(!visited[cur[0]]) {
+    			visited[cur[0]] = true;
+    			
+    			if(cur[0] * 2 <= MAX && !visited[cur[0] * 2]) {
+    				queue.add(new int[] {cur[0]*2, cur[1]});
+    			}
+    			if(cur[0] +1 <= MAX && !visited[cur[0] +1]) {
+    				queue.add(new int[] {cur[0]+1, cur[1] +1});
+    			}
+    			if(cur[0] -1 >= 0 && !visited[cur[0] -1]) {
+    				queue.add(new int[] {cur[0]-1, cur[1] +1});
+    			}
+    		}
+    		
+    		
+    	}
+    	
+    	
+    	
+           
     }
+    
+   
 
-
-
+  
 }
