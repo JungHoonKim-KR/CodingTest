@@ -1,54 +1,52 @@
 import java.io.*;
 import java.util.*;
 
+/*
+    4방 탐색
+    지점 값이 -1 or 1이면 진행 X
+ */
 public class Main {
-	static ArrayList<int[]>graph[];
+    static final int MAX = 100_000;
+    static int N, M;
+    static int[] map = new int[MAX + 1];
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out)); 
-        
-        final int MAX = 100_000;
-    	StringTokenizer st = new StringTokenizer(br.readLine());
-    	
-    	int n = Integer.parseInt(st.nextToken());
-    	int m = Integer.parseInt(st.nextToken());
-    	
-    	PriorityQueue<int[]>queue = new PriorityQueue<>((o1, o2) -> {
-    		return o1[1] - o2[1];
-    	});
-    	boolean visited[] = new boolean[MAX+1];
-    	queue.add(new int[] {n,0});
-    	
-    	while(!queue.isEmpty()) {
-    		int cur[] = queue.poll();
-    		if(cur[0] == m) {
-    			System.out.println(cur[1]);
-    			return;
-    		}
-    		
-    		if(!visited[cur[0]]) {
-    			visited[cur[0]] = true;
-    			
-    			if(cur[0] * 2 <= MAX && !visited[cur[0] * 2]) {
-    				queue.add(new int[] {cur[0]*2, cur[1]});
-    			}
-    			if(cur[0] +1 <= MAX && !visited[cur[0] +1]) {
-    				queue.add(new int[] {cur[0]+1, cur[1] +1});
-    			}
-    			if(cur[0] -1 >= 0 && !visited[cur[0] -1]) {
-    				queue.add(new int[] {cur[0]-1, cur[1] +1});
-    			}
-    		}
-    		
-    		
-    	}
-    	
-    	
-    	
-           
-    }
-    
-   
 
-  
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+
+        Arrays.fill(map, Integer.MAX_VALUE);
+        map[N] = 0;
+        bfs(N);
+    }
+
+    static void bfs(int index) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{index, 0});
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            if(cur[0] == M) {
+                System.out.println(cur[1]);
+                return;
+            }
+            if (2*cur[0] <=MAX && map[2*cur[0]] > cur[1]) {
+                map[2*cur[0]] = cur[1];
+                queue.add(new int[]{2*cur[0], map[2*cur[0]]});
+            }
+            if (cur[0] -1>=0 && map[cur[0] - 1] > cur[1] + 1) {
+                map[cur[0] - 1] = cur[1] + 1;
+                queue.add(new int[]{cur[0] - 1, map[cur[0] - 1]});
+            }
+            if (cur[0] +1<= MAX && map[cur[0] + 1] > cur[1] + 1) {
+                map[cur[0] + 1] = cur[1] + 1;
+                queue.add(new int[]{cur[0] + 1, map[cur[0] + 1]});
+            }
+
+        }
+    }
+
+
 }
+
