@@ -1,54 +1,76 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
+/*
+    4방 탐색
+    지점 값이 -1 or 1이면 진행 X
+ */
 public class Main {
-    static int goX[] = {-1, 0, 1, 0};
-    static int goY[] = {0, -1, 0, 1};
-    static char arr[][];
-    static boolean visit[][];
-    static StringBuilder sb = new StringBuilder();
-    static List<Integer> result = new ArrayList<>();
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new BufferedReader(new InputStreamReader(System.in)));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int node = Integer.parseInt(st.nextToken());
+    static int N;
+    static int[][] go = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    static int[][] map;
+    static ArrayList<Integer> answer = new ArrayList<>();
+    static boolean[][] visited;
 
-        arr = new char[node][node];
-        visit = new boolean[node][node];
-        for (int i = 0; i < node; i++) {
-            arr[i] = br.readLine().toCharArray();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        N = Integer.parseInt(br.readLine());
+        map = new int[N][N];
+        visited = new boolean[N][N];
+        // init
+
+        for (int i = 0; i < N; i++) {
+            char[] ch = br.readLine().toCharArray();
+            for (int j = 0; j < N; j++) {
+                map[i][j] = ch[j] - '0';
+            }
         }
-        int count = 0;
-        for (int i = 0; i < node; i++) {
-            for (int j = 0; j < node; j++) {
-                if (arr[i][j] == '1' && !visit[i][j]) {
-                    result.add(dfs(i,j));
-                    count++;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (map[i][j] == 1 && !visited[i][j]) {
+                    dfs(i, j);
                 }
             }
         }
-        result.sort(Comparator.naturalOrder());
-        System.out.println(count);
-        for(int r : result){
-            sb.append(r).append("\n");
+
+        bw.write(answer.size() + "\n");
+        Collections.sort(answer);
+
+        for (int i = 0; i < answer.size(); i++) {
+            bw.write(answer.get(i) + "\n");
         }
-        System.out.println(sb);
+        bw.flush();
+
+
     }
 
-    static int dfs(int x, int y) {
-        visit[x][y] = true;
-        int result = 1;
-        for (int i = 0; i < 4; i++) {
-            int moveX = goX[i] + x;
-            int moveY = goY[i] + y;
+    static void dfs(int x, int y) {
+        int count = 0;
+        Queue<int[]> q = new LinkedList<>();
+        visited[x][y] = true;
+        q.add(new int[]{x, y});
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            count++;
+            for (int i = 0; i < 4; i++) {
 
-            if (moveX < 0 || moveX >= arr.length || moveY < 0 || moveY >= arr[0].length || visit[moveX][moveY] || arr[moveX][moveY] == '0') {
-                continue;
+                int nx = cur[0] + go[i][0];
+                int ny = cur[1] + go[i][1];
+
+                if (nx < 0 || nx >= N || ny < 0 || ny >= N || visited[nx][ny] || map[nx][ny] == 0)
+                    continue;
+
+                visited[nx][ny] = true;
+                q.add(new int[]{nx, ny});
             }
-
-            result += dfs(moveX, moveY);
         }
-        return result;
+
+        answer.add(count);
     }
+
 
 }
+
