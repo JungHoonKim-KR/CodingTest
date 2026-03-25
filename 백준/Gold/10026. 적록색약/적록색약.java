@@ -1,67 +1,104 @@
 import java.io.*;
 import java.util.*;
 
-
+/*
+    4방 탐색
+    지점 값이 -1 or 1이면 진행 X
+ */
 public class Main {
-    static int n;
-    static char[][] originMap;
-    static char[][] changedMap;
-    static boolean[][] visit;
-    static int[][] go = {{-1,0},{1,0},{0,1},{0,-1}};
+    static int N;
+    static char[] charset = {'R', 'G', 'B'};
+    static int[][] go = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    static char[][] map;
+    static ArrayList<Integer> answer = new ArrayList<>();
+    static boolean[][] visited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n =Integer.parseInt(br.readLine());
-        originMap = new char[n][n];
-        changedMap = new char[n][n];
-        for(int i = 0;i<n; i++){
-            char[] charArray = br.readLine().toCharArray();
-            for(int j = 0;j<n;j++){
-                originMap[i][j] = charArray[j];
-                if(charArray[j] == 'G'){
-                    changedMap[i][j] = 'R';
-                }
-                else changedMap[i][j] = charArray[j];
-            }
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        }
-        visit = new boolean[n][n];
-        int originCount = 0;
-        for(int i = 0;i<n;i++){
-            for(int j=0; j<n; j++){
-                if(!visit[i][j]){
-                    dfs(i,j,originMap, originMap[i][j]);
-                    originCount++;
-                }
+        // init
+        int normalCount = 0, specialCount = 0;
+        N = Integer.parseInt(br.readLine());
+        map = new char[N][N];
+        for (int i = 0; i < N; i++) {
+            char[] ch = br.readLine().toCharArray();
+            for (int j = 0; j < N; j++) {
+                map[i][j] = ch[j];
             }
         }
 
-        visit = new boolean[n][n];
-        int changedCount = 0;
-        for(int i = 0;i<n;i++){
-            for(int j=0; j<n; j++){
-                if(!visit[i][j]){
-                    dfs(i,j,changedMap, changedMap[i][j]);
-                    changedCount++;
+        // 적록 X
+        visited = new boolean[N][N];
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                if(!visited[i][j]) {
+                    normal(i, j);
+                    normalCount++;
                 }
             }
         }
 
-        System.out.println(originCount +" "+ changedCount);
+        visited = new boolean[N][N];
+        for(int i = 0; i< N; i++){
+            for(int j = 0; j < N; j++){
+                if(!visited[i][j]){
+                    special(i, j);
+                    specialCount++;
+                }
+            }
+        }
+
+        System.out.println(normalCount + " " + specialCount);
+
     }
 
-    static void dfs(int startX, int startY, char[][] map, char target){
-        visit[startX][startY] = true;
-        for(int i =0; i<4; i++){
-            int moveX = startX + go[i][0];
-            int moveY = startY + go[i][1];
-            if(moveX<0 || moveY<0 || moveX>=n || moveY>=n || visit[moveX][moveY] || map[moveX][moveY] != target){
-                continue;
+
+    static void normal(int x, int y){
+        char initC = map[x][y];
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{x, y});
+        visited[x][y] = true;
+
+        while(!queue.isEmpty()){
+            int[] cur = queue.poll();
+            for(int i = 0; i < 4; i++){
+                int nx = cur[0] + go[i][0];
+                int ny = cur[1] + go[i][1];
+
+                if(nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
+                if(visited[nx][ny] || initC != map[nx][ny]) continue;
+
+                visited[nx][ny] = true;
+                queue.add(new int[]{nx, ny});
             }
-            visit[moveX][moveY] = true;
-            dfs(moveX, moveY, map, target);
         }
     }
 
+    static void special(int x, int y){
+        char initC = map[x][y];
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{x, y});
+        visited[x][y] = true;
+
+        while(!queue.isEmpty()){
+            int[] cur = queue.poll();
+            for(int i = 0; i < 4; i++){
+                int nx = cur[0] + go[i][0];
+                int ny = cur[1] + go[i][1];
+
+
+                if(nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
+                if(visited[nx][ny]) continue;
+                if((initC == 'R' || initC == 'G') && map[nx][ny] == 'B') continue;
+                if(initC == 'B' && (initC != map[nx][ny])) continue;
+                visited[nx][ny] = true;
+                queue.add(new int[]{nx, ny});
+            }
+        }
+    }
 
 }
+
